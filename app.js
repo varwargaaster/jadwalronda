@@ -12,65 +12,47 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyHzOfCv1uAUm4fhHWIG_vT
 // Data Mockup untuk uji coba lokal & demonstrasi jika API_URL belum dikonfigurasi
 const MOCK_CONFIG = {
   status: "ok",
-  mulaiRonda: "01/08/2026",
+  mulaiRonda: "01/05/2026",
   judulHeader: "Jadwal Ronda Warga Villa Aster Residence",
   logoPaguyuban: "", 
   logoPerumahan: "",
-  footerCopy: "Villa Aster Residence © 2026. Aman, Tertib, Rukun.",
+  footerCopy: "Villa Aster Residence © 2026. Halaman portal transparansi jadwal ronda malam dan kontribusi warga Villa Aster Residence.",
   jumlahGroupHutangRonda: 2,
-  putaranAktif: 3
+  putaranAktif: 2
 };
 
 const MOCK_JADWAL = {
   status: "ok",
-  putaran: 3,
+  putaran: 2,
   data: [
-    // GROUP 1 - HUTANG (Minggu ke-1)
-    { putaran: 3, group: 1, namaGroup: "Al Aziz", jenis: "Hutang", tanggal: "01/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-02", nama: "Agus", danru: "Ya", tanggalTidakRonda: "24/05/2026", alasanTidakHadir: "Dinas Luar Kota" },
-    { putaran: 3, group: 1, namaGroup: "Al Aziz", jenis: "Hutang", tanggal: "01/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-12", nama: "Budi", danru: "Tidak", tanggalTidakRonda: "24/05/2026", alasanTidakHadir: "Sakit" },
-    { putaran: 3, group: 1, namaGroup: "Al Aziz", jenis: "Hutang", tanggal: "01/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-02", nama: "Dedi", danru: "Tidak", tanggalTidakRonda: "31/05/2026", alasanTidakHadir: "Izin Keluarga" },
-    { putaran: 3, group: 1, namaGroup: "Al Aziz", jenis: "Hutang", tanggal: "01/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-02", nama: "Hendro", danru: "Tidak", tanggalTidakRonda: "17/05/2026", alasanTidakHadir: "Tugas Ronda Tabrakan" },
+    // GROUP 1 - HUTANG (Mei)
+    { putaran: 2, group: 1, namaGroup: "Al Ghaffaar", jenis: "Hutang", tanggal: "02/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-02", nama: "Agus", danru: "Ya", tanggalTidakRonda: "24/02/2026", alasanTidakHadir: "Sakit Demam" },
+    { putaran: 2, group: 1, namaGroup: "Al Ghaffaar", jenis: "Hutang", tanggal: "02/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-12", nama: "Budi", danru: "Tidak", tanggalTidakRonda: "24/02/2026", alasanTidakHadir: "Dinas Luar Kota" },
+    { putaran: 2, group: 1, namaGroup: "Al Ghaffaar", jenis: "Hutang", tanggal: "02/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-02", nama: "Dedi", danru: "Tidak", tanggalTidakRonda: "24/02/2026", alasanTidakHadir: "Izin Keluarga" },
 
-    // GROUP 2 - HUTANG (Minggu ke-2)
-    { putaran: 3, group: 2, namaGroup: "Al Malik", jenis: "Hutang", tanggal: "08/08/2026", titikKumpul: "Pos Balai Warga", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-05", nama: "Hendra", danru: "Ya", tanggalTidakRonda: "24/05/2026", alasanTidakHadir: "Dinas Malam" },
-    { putaran: 3, group: 2, namaGroup: "Al Malik", jenis: "Hutang", tanggal: "08/08/2026", titikKumpul: "Pos Balai Warga", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-04", nama: "Samsul", danru: "Tidak", tanggalTidakRonda: "24/05/2026", alasanTidakHadir: "Sakit Demam" },
-    { putaran: 3, group: 2, namaGroup: "Al Malik", jenis: "Hutang", tanggal: "08/08/2026", titikKumpul: "Pos Balai Warga", linkMaps: "https://maps.google.com", wilayah: "Al-Kautsar", blok: "K-03", nama: "Roni", danru: "Tidak", tanggalTidakRonda: "10/05/2026", alasanTidakHadir: "Luar Kota" },
+    // GROUP 2 - HUTANG (Mei)
+    { putaran: 2, group: 2, namaGroup: "Al Qahhaar", jenis: "Hutang", tanggal: "09/05/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-05", nama: "Hendra", danru: "Ya", tanggalTidakRonda: "10/02/2026", alasanTidakHadir: "Tugas Shift Malam" },
+    { putaran: 2, group: 2, namaGroup: "Al Qahhaar", jenis: "Hutang", tanggal: "09/05/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-04", nama: "Samsul", danru: "Tidak", tanggalTidakRonda: "10/02/2026", alasanTidakHadir: "Sakit Flu" },
 
-    // GROUP 3 - REGULER (Minggu ke-3)
-    { putaran: 3, group: 3, namaGroup: "Al Quddus", jenis: "Reguler", tanggal: "15/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-12", nama: "Rachman", danru: "Ya" },
-    { putaran: 3, group: 3, namaGroup: "Al Quddus", jenis: "Reguler", tanggal: "15/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-07", nama: "Herman", danru: "Tidak" },
-    { putaran: 3, group: 3, namaGroup: "Al Quddus", jenis: "Reguler", tanggal: "15/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Al-Kautsar", blok: "K-02", nama: "Bobby", danru: "Tidak" },
-    { putaran: 3, group: 3, namaGroup: "Al Quddus", jenis: "Reguler", tanggal: "15/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Tebing Keraton", blok: "T-01", nama: "Yusuf", danru: "Tidak" },
-    { putaran: 3, group: 3, namaGroup: "Al Quddus", jenis: "Reguler", tanggal: "15/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-08", nama: "Joko", danru: "Tidak" },
-    { putaran: 3, group: 3, namaGroup: "Al Quddus", jenis: "Reguler", tanggal: "15/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-10", nama: "Anto", danru: "Tidak" },
-    { putaran: 3, group: 3, namaGroup: "Al Quddus", jenis: "Reguler", tanggal: "15/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-09", nama: "Danang", danru: "Tidak" },
-    { putaran: 3, group: 3, namaGroup: "Al Quddus", jenis: "Reguler", tanggal: "15/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-15", nama: "Taufik", danru: "Tidak" },
+    // GROUP 3 - REGULER (Mei)
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-12", nama: "Pak Rachman", danru: "Ya" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "G-07", nama: "Goklas Toni", danru: "Tidak" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Al-Kautsar", blok: "K-02", nama: "Bobby", danru: "Tidak" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Tebing Keraton", blok: "T-01", nama: "Yusuf", danru: "Tidak" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-08", nama: "Joko", danru: "Tidak" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-10", nama: "Anto", danru: "Tidak" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-09", nama: "Danang", danru: "Tidak" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-15", nama: "Taufik", danru: "Tidak" },
 
-    // GROUP 4 - REGULER (Minggu ke-4)
-    { putaran: 3, group: 4, namaGroup: "As Salam", jenis: "Reguler", tanggal: "22/08/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-05", nama: "Rudi", danru: "Ya" },
-    { putaran: 3, group: 4, namaGroup: "As Salam", jenis: "Reguler", tanggal: "22/08/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-11", nama: "Anton", danru: "Tidak" },
-    { putaran: 3, group: 4, namaGroup: "As Salam", jenis: "Reguler", tanggal: "22/08/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "Al-Kautsar", blok: "K-04", nama: "Farhan", danru: "Tidak" },
-    { putaran: 3, group: 4, namaGroup: "As Salam", jenis: "Reguler", tanggal: "22/08/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "Tebing Keraton", blok: "T-03", nama: "Satria", danru: "Tidak" },
-    { putaran: 3, group: 4, namaGroup: "As Salam", jenis: "Reguler", tanggal: "22/08/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-17", nama: "Rian", danru: "Tidak" },
-    { putaran: 3, group: 4, namaGroup: "As Salam", jenis: "Reguler", tanggal: "22/08/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-12", nama: "Fajar", danru: "Tidak" },
-    { putaran: 3, group: 4, namaGroup: "As Salam", jenis: "Reguler", tanggal: "22/08/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-08", nama: "Eko", danru: "Tidak" },
-    { putaran: 3, group: 4, namaGroup: "As Salam", jenis: "Reguler", tanggal: "22/08/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-10", nama: "Yudi", danru: "Tidak" },
-
-    // GROUP 5 - REGULER (Minggu ke-5)
-    { putaran: 3, group: 5, namaGroup: "Al Mu'min", jenis: "Reguler", tanggal: "29/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Al-Kautsar", blok: "K-08", nama: "Dani", danru: "Ya" },
-    { putaran: 3, group: 5, namaGroup: "Al Mu'min", jenis: "Reguler", tanggal: "29/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Tebing Keraton", blok: "T-05", nama: "Guntur", danru: "Tidak" },
-    { putaran: 3, group: 5, namaGroup: "Al Mu'min", jenis: "Reguler", tanggal: "29/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-12", nama: "Doni", danru: "Tidak" },
-    { putaran: 3, group: 5, namaGroup: "Al Mu'min", jenis: "Reguler", tanggal: "29/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-15", nama: "Rahmat", danru: "Tidak" },
-    { putaran: 3, group: 5, namaGroup: "Al Mu'min", jenis: "Reguler", tanggal: "29/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-20", nama: "Yanto", danru: "Tidak" },
-    { putaran: 3, group: 5, namaGroup: "Al Mu'min", jenis: "Reguler", tanggal: "29/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-15", nama: "Bagus", danru: "Tidak" },
-    { putaran: 3, group: 5, namaGroup: "Al Mu'min", jenis: "Reguler", tanggal: "29/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Al-Kautsar", blok: "K-10", nama: "Wawan", danru: "Tidak" },
-    { putaran: 3, group: 5, namaGroup: "Al Mu'min", jenis: "Reguler", tanggal: "29/08/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Tebing Keraton", blok: "T-07", nama: "Lukman", danru: "Tidak" },
-
-    // GROUP 6 - REGULER (Minggu ke-6 - Bulan September)
-    { putaran: 3, group: 6, namaGroup: "Al Muhaimin", jenis: "Reguler", tanggal: "05/09/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-20", nama: "Irwan", danru: "Ya" },
-    { putaran: 3, group: 6, namaGroup: "Al Muhaimin", jenis: "Reguler", tanggal: "05/09/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-15", nama: "Taufan", danru: "Tidak" },
-    { putaran: 3, group: 6, namaGroup: "Al Muhaimin", jenis: "Reguler", tanggal: "05/09/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-25", nama: "Seno", danru: "Tidak" },
-    { putaran: 3, group: 6, namaGroup: "Al Muhaimin", jenis: "Reguler", tanggal: "05/09/2026", titikKumpul: "Pos Security", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-18", nama: "Aris", danru: "Tidak" }
+    // GROUP 7 - REGULER (Juni - Ronda Terdekat di Mockup)
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-05", nama: "Bp joko", danru: "Ya" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-11", nama: "Anton", danru: "Tidak" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Al-Kautsar", blok: "K-04", nama: "Farhan", danru: "Tidak" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Tebing Keraton", blok: "T-03", nama: "Satria", danru: "Tidak" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-17", nama: "Rian", danru: "Tidak" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-12", nama: "Fajar", danru: "Tidak" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-08", nama: "Eko", danru: "Tidak" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-10", nama: "Yudi", danru: "Tidak" }
   ]
 };
 
@@ -85,9 +67,6 @@ let rondaTerdekatGroup = null;
 // DATE HELPERS
 // ==========================================================================
 
-/**
- * Mengubah format DD/MM/YYYY menjadi objek Date
- */
 function parseDateString(dateStr) {
   if (!dateStr) return null;
   const parts = dateStr.split('/');
@@ -97,9 +76,6 @@ function parseDateString(dateStr) {
   return new Date(dateStr);
 }
 
-/**
- * Format tanggal ke nama hari & bulan bahasa Indonesia (misal: Sabtu, 16 Mei 2026)
- */
 function formatIndonesianDate(dateStr) {
   const date = parseDateString(dateStr);
   if (!date || isNaN(date.getTime())) return dateStr;
@@ -118,9 +94,6 @@ function formatIndonesianDate(dateStr) {
   return `${dayName}, ${dayNum} ${monthName} ${year}`;
 }
 
-/**
- * Dapatkan label Bulan Tahun dari format tanggal (misal: "Agustus 2026")
- */
 function getMonthYearLabel(dateStr) {
   const date = parseDateString(dateStr);
   if (!date || isNaN(date.getTime())) return "";
@@ -137,9 +110,6 @@ function getMonthYearLabel(dateStr) {
 // LOGIC UTILITIES
 // ==========================================================================
 
-/**
- * Mengelompokkan baris-baris data dari API ke dalam grup ronda terstruktur
- */
 function processRawJadwal(rawData) {
   const groupsMap = {};
   
@@ -149,7 +119,7 @@ function processRawJadwal(rawData) {
       groupsMap[key] = {
         putaran: parseInt(row.putaran, 10),
         groupNumber: parseInt(row.group, 10),
-        namaGroup: row.namaGroup || `Group ${row.group}`,
+        namaGroup: row.namaGroup || `Grup ${row.group}`,
         jenis: row.jenis || "Reguler",
         tanggal: row.tanggal,
         titikKumpul: row.titikKumpul || "Pos Security",
@@ -168,7 +138,6 @@ function processRawJadwal(rawData) {
     });
   });
   
-  // Konversi map ke array dan urutkan berdasarkan tanggal & nomor grup
   const groupsArray = Object.values(groupsMap).sort((a, b) => {
     const dateA = parseDateString(a.tanggal);
     const dateB = parseDateString(b.tanggal);
@@ -178,7 +147,6 @@ function processRawJadwal(rawData) {
     return a.groupNumber - b.groupNumber;
   });
   
-  // Urutkan anggota di setiap grup (DANRU paling atas)
   groupsArray.forEach(group => {
     group.members.sort((a, b) => {
       const isDanruA = a.danru === "Ya" ? 1 : 0;
@@ -190,16 +158,13 @@ function processRawJadwal(rawData) {
   return groupsArray;
 }
 
-/**
- * Mencari grup ronda terdekat berdasarkan tanggal hari ini
- */
 function findRondaTerdekat(groups) {
   if (groups.length === 0) return null;
   
+  // Membandingkan hari ini (tanpa jam)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  // Filter grup yang tanggalnya hari ini atau ke depan
   const upcomingGroups = groups.filter(g => {
     const gDate = parseDateString(g.tanggal);
     return gDate && gDate.getTime() >= today.getTime();
@@ -209,16 +174,12 @@ function findRondaTerdekat(groups) {
     return upcomingGroups[0];
   }
   
-  // Jika semua sudah di masa lalu, ambil grup paling akhir yang terlaksana
   return groups[groups.length - 1];
 }
 
-/**
- * Menghitung selisih hari dan membuat status countdown badge
- */
 function getCountdownStatus(dateStr) {
   const gDate = parseDateString(dateStr);
-  if (!gDate) return { text: "", class: "past" };
+  if (!gDate) return { text: "", class: "past", html: "" };
   
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -227,9 +188,9 @@ function getCountdownStatus(dateStr) {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   
   if (diffDays === 0) {
-    return { text: "Ronda dilaksanakan hari ini!", class: "today", html: "🟢 Ronda dilaksanakan hari ini!" };
+    return { text: "Hari ini!", class: "today", html: "🟢 Hari ini!" };
   } else if (diffDays > 0) {
-    return { text: `${diffDays} hari lagi`, class: "upcoming", html: `🕐 Ronda dilaksanakan ${diffDays} hari lagi` };
+    return { text: `Sisa ${diffDays} Hari Lagi`, class: "upcoming", html: `🕐 Sisa ${diffDays} Hari Lagi` };
   } else {
     const pastDays = Math.abs(diffDays);
     return { text: `Ronda sudah terlaksana ${pastDays} hari lalu`, class: "past", html: `✔ Ronda sudah terlaksana ${pastDays} hari lalu` };
@@ -240,15 +201,11 @@ function getCountdownStatus(dateStr) {
 // RENDER METHODS
 // ==========================================================================
 
-/**
- * Render elemen Header & Logo berdasarkan konfigurasi
- */
 function renderHeader(config) {
-  document.getElementById("main-title").textContent = config.judulHeader || "Jadwal Ronda Warga";
+  document.getElementById("main-title").textContent = config.judulHeader || "Jadwal Ronda Warga Villa Aster Residence";
   document.getElementById("putaran-label").textContent = `PUTARAN ${config.putaranAktif}`;
   document.getElementById("footer-text").textContent = config.footerCopy || "Villa Aster Residence";
   
-  // Handle Logo
   const logoPerum = document.getElementById("logo-perumahan");
   if (config.logoPerumahan) {
     logoPerum.src = config.logoPerumahan;
@@ -267,16 +224,53 @@ function renderHeader(config) {
 }
 
 /**
- * Menghasilkan markup HTML untuk sebuah Card Group (Dibuat persis seperti gambar referensi)
+ * Render Stats Banner secara dinamis
  */
-function createCardHTML(group, isExportMode = false, isTerdekat = false) {
+function renderStats() {
+  const statsBanner = document.getElementById("stats-banner");
+  if (!statsBanner) return;
+  
+  const totalGrup = allGroups.length;
+  const totalPeserta = allGroups.reduce((sum, g) => sum + g.members.length, 0);
+  const grupHutang = allGroups.filter(g => g.jenis.toLowerCase() === "hutang").length;
+  const grupReguler = allGroups.filter(g => g.jenis.toLowerCase() === "reguler").length;
+  const putaran = globalConfig ? globalConfig.putaranAktif : "-";
+  
+  statsBanner.innerHTML = `
+    <div class="stats-item">
+      <span class="stats-icon">🔄</span>
+      <span>Putaran: <strong>${putaran}</strong></span>
+    </div>
+    <div class="stats-item">
+      <span class="stats-icon">👥</span>
+      <span>Total Grup: <strong>${totalGrup} Kelompok</strong></span>
+    </div>
+    <div class="stats-item">
+      <span class="stats-icon">👤</span>
+      <span>Total Peserta: <strong>${totalPeserta} Orang</strong></span>
+    </div>
+    <div class="stats-item">
+      <span class="stats-icon">⚠️</span>
+      <span class="stats-label-debt">Grup Hutang: <strong>${grupHutang}</strong></span>
+    </div>
+    <div class="stats-item">
+      <span class="stats-icon">📅</span>
+      <span class="stats-label-reg">Grup Reguler: <strong>${grupReguler}</strong></span>
+    </div>
+  `;
+  statsBanner.style.display = "flex";
+}
+
+/**
+ * Menghasilkan markup HTML untuk sebuah Card Group (Daftar card bulanan)
+ */
+function createCardHTML(group, isExportMode = false) {
   const countdown = getCountdownStatus(group.tanggal);
-  const cardId = isTerdekat ? `terdekat-card-${group.groupNumber}` : `group-card-${group.groupNumber}`;
+  const cardId = `group-card-${group.groupNumber}`;
   const formattedDate = formatIndonesianDate(group.tanggal);
   const mapLink = group.linkMaps ? `href="${group.linkMaps}" target="_blank" rel="noopener"` : '';
   const typeBadgeClass = group.jenis.toLowerCase() === "hutang" ? "hutang" : "reguler";
   
-  // Ambil nama DANRU
   const danruMember = group.members.find(m => m.danru === "Ya");
   const danruName = danruMember ? danruMember.nama : "-";
   
@@ -299,7 +293,6 @@ function createCardHTML(group, isExportMode = false, isTerdekat = false) {
       </div>
     `;
     
-    // Tampilkan informasi detail jika tipe adalah Hutang dan memiliki data absen
     if (group.jenis.toLowerCase() === "hutang" && (member.tanggalTidakRonda || member.alasanTidakHadir)) {
       const reasonStr = member.alasanTidakHadir ? ` · ${member.alasanTidakHadir}` : "";
       memberRowsHTML += `
@@ -319,16 +312,27 @@ function createCardHTML(group, isExportMode = false, isTerdekat = false) {
         <div class="group-title-container">
           <span class="group-title-label">Grup ${group.groupNumber}</span>
           <span class="group-name-text">${group.namaGroup}</span>
-          ${!isExportMode ? `
-            <button class="btn-copy-card-inline export-hide" onclick="copyCardToClipboard('${cardId}', this)" title="Salin Card Gambar">
-              <svg viewBox="0 0 24 24" class="svg-icon-inline" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-            </button>
-          ` : ''}
         </div>
-        <span class="group-type-badge ${typeBadgeClass}">${group.jenis}</span>
+        
+        <div class="card-header-right-actions">
+          ${!isExportMode ? `
+            <div class="card-actions-wrapper export-hide" style="display: inline-flex; gap: 0.15rem;">
+              <button class="btn-copy-card-inline" onclick="copyCardToClipboard('${cardId}', this)" title="Salin Card Gambar">
+                <svg viewBox="0 0 24 24" class="svg-icon-inline" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+              <button class="btn-copy-card-inline" onclick="downloadCardScreenshot('${cardId}', this, '${group.groupNumber}')" title="Download Gambar Card">
+                <svg viewBox="0 0 24 24" class="svg-icon-inline" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </button>
+            </div>
+          ` : ''}
+          <span class="group-type-badge ${typeBadgeClass}">${group.jenis}</span>
+        </div>
       </div>
       
       <div class="card-meta-list">
@@ -341,7 +345,7 @@ function createCardHTML(group, isExportMode = false, isTerdekat = false) {
         </div>
         <div class="meta-row">
           <span class="meta-icon">📍</span>
-          <span>Titik Kumpul: ${group.linkMaps ? `<a ${mapLink} class="meta-row link-maps" style="display:inline; padding:0; margin:0;"><strong>${group.titikKumpul}</strong></a>` : `<strong>${group.titikKumpul}</strong>`}</span>
+          <span>Titik Kumpul: ${group.linkMaps ? `<a ${mapLink} class="link-maps" style="display:inline; padding:0; margin:0;"><strong>${group.titikKumpul}</strong></a>` : `<strong>${group.titikKumpul}</strong>`}</span>
         </div>
       </div>
       
@@ -364,6 +368,119 @@ function createCardHTML(group, isExportMode = false, isTerdekat = false) {
 }
 
 /**
+ * Menghasilkan markup HTML untuk Card Ronda Terdekat (Teal Style dengan Accordeon)
+ */
+function createRondaTerdekatHTML(group, isExportMode = false) {
+  const countdown = getCountdownStatus(group.tanggal);
+  const cardId = `terdekat-card-${group.groupNumber}`;
+  const formattedDate = formatIndonesianDate(group.tanggal);
+  const mapLink = group.linkMaps ? `href="${group.linkMaps}" target="_blank" rel="noopener"` : '';
+  
+  const danruMember = group.members.find(m => m.danru === "Ya");
+  const danruName = danruMember ? danruMember.nama : "-";
+  
+  let memberRowsHTML = "";
+  group.members.forEach(member => {
+    const isDanru = member.danru === "Ya";
+    const danruBadge = isDanru ? `<span class="member-badge-item danru">DANRU</span>` : "";
+    const nameText = isDanru ? `<strong>${member.nama}</strong>` : member.nama;
+    
+    memberRowsHTML += `
+      <div class="member-row-item">
+        <div class="member-left-info">
+          <span class="member-blok-tag">${member.blok || "-"}</span>
+          <span class="member-nama-text">${nameText}</span>
+        </div>
+        <div class="member-right-badges">
+          ${danruBadge}
+          <span class="member-badge-item wilayah">${member.wilayah || "-"}</span>
+        </div>
+      </div>
+    `;
+  });
+  
+  return `
+    <div class="ronda-terdekat-top-bar">
+      <span class="ronda-terdekat-badge">🟢 RONDA TERDEKAT</span>
+      <div class="ronda-terdekat-header-right">
+        ${!isExportMode ? `
+          <div class="card-actions-wrapper export-hide" style="display: inline-flex; gap: 0.25rem; margin-right: 0.75rem; vertical-align: middle;">
+            <button class="btn-copy-card-inline" style="color: #ffffff; background-color: rgba(255, 255, 255, 0.1);" onclick="copyCardToClipboard('${cardId}', this)" title="Salin Card Gambar">
+              <svg viewBox="0 0 24 24" class="svg-icon-inline" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+            </button>
+            <button class="btn-copy-card-inline" style="color: #ffffff; background-color: rgba(255, 255, 255, 0.1);" onclick="downloadCardScreenshot('${cardId}', this, '${group.groupNumber}')" title="Download Gambar Card">
+              <svg viewBox="0 0 24 24" class="svg-icon-inline" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+            </button>
+          </div>
+        ` : ''}
+        <span class="ronda-terdekat-putaran-label">PUTARAN ${group.putaran}</span>
+      </div>
+    </div>
+    
+    <div class="ronda-terdekat-title-container">
+      <h3 class="ronda-terdekat-group-title">Grup ${group.groupNumber} - ${group.namaGroup}</h3>
+    </div>
+    
+    <div class="ronda-terdekat-grid">
+      <div class="ronda-terdekat-meta-item">
+        📅 <strong>Hari:</strong> Sabtu, <strong>Tanggal:</strong> ${formattedDate.replace(/^(Minggu|Senin|Selasa|Rabu|Kamis|Jumat|Sabtu),\s*/, "")}
+      </div>
+      <div class="ronda-terdekat-meta-item">
+        📍 <strong>Titik Kumpul:</strong> ${group.linkMaps ? `<a ${mapLink} class="ronda-terdekat-meta-item link-maps"><strong>${group.titikKumpul}</strong></a>` : `<strong>${group.titikKumpul}</strong>`}
+      </div>
+      <div class="ronda-terdekat-meta-item">
+        👥 <strong>Jumlah Peserta:</strong> <strong>${group.members.length} Orang</strong>
+      </div>
+      <div class="ronda-terdekat-meta-item">
+        🛡️ <strong>DANRU:</strong> <strong>${danruName}</strong>
+      </div>
+    </div>
+    
+    <div class="ronda-terdekat-bottom-bar">
+      <div class="ronda-terdekat-countdown">
+        <span>🕐 ⏳ ${countdown.text}</span>
+      </div>
+      ${!isExportMode ? `
+        <button id="btn-toggle-members-accordeon" class="btn-ronda-terdekat-accordeon export-hide" onclick="toggleRondaTerdekatMembers()">
+          <span>Lihat Detail Anggota</span> <span>↓</span>
+        </button>
+      ` : ''}
+    </div>
+    
+    <div id="ronda-terdekat-accordeon" class="ronda-terdekat-accordeon" style="display: ${isExportMode ? 'block' : 'none'};">
+      <div class="member-list-header" style="color: rgba(255,255,255,0.75);">Daftar Anggota (${group.members.length} Orang)</div>
+      <div class="member-list">
+        ${memberRowsHTML}
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Toggle penciutan/accordeon daftar anggota Ronda Terdekat
+ */
+function toggleRondaTerdekatMembers() {
+  const acc = document.getElementById("ronda-terdekat-accordeon");
+  const btn = document.getElementById("btn-toggle-members-accordeon");
+  if (!acc || !btn) return;
+  
+  const isHidden = acc.style.display === "none";
+  if (isHidden) {
+    acc.style.display = "block";
+    btn.innerHTML = `<span>Sembunyikan Anggota</span> <span>↑</span>`;
+  } else {
+    acc.style.display = "none";
+    btn.innerHTML = `<span>Lihat Detail Anggota</span> <span>↓</span>`;
+  }
+}
+
+/**
  * Render Card Ronda Terdekat di paling atas
  */
 function renderRondaTerdekat(group) {
@@ -373,9 +490,8 @@ function renderRondaTerdekat(group) {
     return;
   }
   
-  // Render Ronda Terdekat dengan parameter isTerdekat = true agar ID card berbeda
-  const cardHTML = createCardHTML(group, false, true);
-  container.innerHTML = `<div class="ronda-terdekat-card">${cardHTML}</div>`;
+  const cardHTML = createRondaTerdekatHTML(group);
+  container.innerHTML = `<div class="ronda-terdekat-card" id="terdekat-card-${group.groupNumber}">${cardHTML}</div>`;
 }
 
 /**
@@ -385,7 +501,6 @@ function renderFilterBulan(groups) {
   const tabsContainer = document.getElementById("filter-bulan");
   tabsContainer.innerHTML = "";
   
-  // Cari daftar bulan unik
   const monthsMap = {};
   groups.forEach(g => {
     const label = getMonthYearLabel(g.tanggal);
@@ -394,14 +509,12 @@ function renderFilterBulan(groups) {
     }
   });
   
-  // Urutkan daftar bulan secara kronologis
   monthsList = Object.keys(monthsMap).sort((a, b) => {
     return monthsMap[a].getTime() - monthsMap[b].getTime();
   });
   
   if (monthsList.length === 0) return;
   
-  // Pilih bulan aktif secara default: bulan yang mengandung Ronda Terdekat
   if (rondaTerdekatGroup) {
     activeMonth = getMonthYearLabel(rondaTerdekatGroup.tanggal);
   }
@@ -442,11 +555,10 @@ function renderJadwalGrid(monthLabel) {
     return;
   }
   
-  // Pisahkan Grup Hutang & Grup Reguler
   const hutangGroups = filteredGroups.filter(g => g.jenis.toLowerCase() === "hutang");
   const regulerGroups = filteredGroups.filter(g => g.jenis.toLowerCase() === "reguler");
   
-  // 1. Render Grup Hutang Ronda (Jika ada)
+  // 1. Render Grup Hutang Ronda
   if (hutangGroups.length > 0) {
     const hutangSection = document.createElement("div");
     hutangSection.className = "grid-section";
@@ -468,7 +580,7 @@ function renderJadwalGrid(monthLabel) {
     gridContainer.appendChild(hutangSection);
   }
   
-  // 2. Render Grup Reguler (Jika ada)
+  // 2. Render Grup Reguler
   if (regulerGroups.length > 0) {
     const regulerSection = document.createElement("div");
     regulerSection.className = "grid-section";
@@ -499,7 +611,6 @@ function initTheme() {
   const toggleBtn = document.getElementById("btn-theme-toggle");
   if (!toggleBtn) return;
   
-  // Default Light Theme (jika belum tersimpan, set light)
   const savedTheme = localStorage.getItem("theme") || "light";
   const isDark = savedTheme === "dark";
   
@@ -565,9 +676,15 @@ async function copyCardToClipboard(cardId, button) {
     const clone = card.cloneNode(true);
     clone.querySelectorAll('.export-hide').forEach(el => el.remove());
     
+    // Pastikan accordeon anggota Ronda Terdekat terekspos penuh di screenshot gambar
+    const isTerdekat = cardId.startsWith('terdekat-card');
+    if (isTerdekat) {
+      const acc = clone.querySelector('.ronda-terdekat-accordeon');
+      if (acc) acc.style.display = 'block';
+    }
+    
     const wrapper = document.createElement('div');
     wrapper.className = 'export-mode';
-    // Warisi mode tema saat ini agar warna screenshot sesuai dengan tema yang aktif
     if (document.body.classList.contains("dark-theme")) {
       wrapper.className += ' dark-theme';
     }
@@ -600,7 +717,8 @@ async function copyCardToClipboard(cardId, button) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `ronda-group-${cardId.replace('group-card-', '').replace('terdekat-card-', 'terdekat-')}.png`;
+        const gNum = cardId.replace('group-card-', '').replace('terdekat-card-', 'terdekat-');
+        a.download = `ronda-group-${gNum}.png`;
         a.click();
         URL.revokeObjectURL(url);
         showToast("Gambar diunduh otomatis.");
@@ -610,6 +728,166 @@ async function copyCardToClipboard(cardId, button) {
   } catch (err) {
     console.error("Gagal menyalin gambar:", err);
     alert("Gagal memproses salin gambar: " + err.message);
+  } finally {
+    button.innerHTML = originalHTML;
+    button.disabled = false;
+  }
+}
+
+/**
+ * Download screenshot satu card group langsung sebagai file PNG
+ */
+async function downloadCardScreenshot(cardId, button, groupNumber) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  
+  const originalHTML = button.innerHTML;
+  button.innerHTML = `
+    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation: spin 1s linear infinite;">
+      <circle cx="12" cy="12" r="10" stroke="rgba(0,0,0,0.1)"></circle>
+      <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+    </svg>
+  `;
+  button.disabled = true;
+  
+  try {
+    const clone = card.cloneNode(true);
+    clone.querySelectorAll('.export-hide').forEach(el => el.remove());
+    
+    const isTerdekat = cardId.startsWith('terdekat-card');
+    if (isTerdekat) {
+      const acc = clone.querySelector('.ronda-terdekat-accordeon');
+      if (acc) acc.style.display = 'block';
+    }
+    
+    const wrapper = document.createElement('div');
+    wrapper.className = 'export-mode';
+    if (document.body.classList.contains("dark-theme")) {
+      wrapper.className += ' dark-theme';
+    }
+    
+    wrapper.style.position = 'fixed';
+    wrapper.style.left = '-9999px';
+    wrapper.style.top = '0';
+    wrapper.style.width = '380px';
+    wrapper.appendChild(clone);
+    document.body.appendChild(wrapper);
+    
+    const isDarkActive = document.body.classList.contains("dark-theme");
+    const canvas = await html2canvas(wrapper, {
+      scale: 2.5,
+      backgroundColor: isDarkActive ? '#171e30' : '#ffffff',
+      useCORS: true
+    });
+    
+    document.body.removeChild(wrapper);
+    
+    const url = canvas.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ronda-grup-${groupNumber}.png`;
+    a.click();
+    showToast("Gambar card berhasil diunduh!");
+  } catch (err) {
+    console.error("Gagal mengunduh gambar card:", err);
+    alert("Gagal mengunduh gambar: " + err.message);
+  } finally {
+    button.innerHTML = originalHTML;
+    button.disabled = false;
+  }
+}
+
+/**
+ * Salin Gambar Jadwal Utama (Bulan Aktif) ke Clipboard
+ */
+async function copyJadwalMainToClipboard(button) {
+  const originalHTML = button.innerHTML;
+  button.innerHTML = `
+    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation: spin 1s linear infinite; margin-right: 0.5rem;">
+      <circle cx="12" cy="12" r="10" stroke="rgba(0,0,0,0.1)"></circle>
+      <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
+    </svg>
+    <span>Menyiapkan...</span>
+  `;
+  button.disabled = true;
+  
+  try {
+    const putaranNo = globalConfig ? globalConfig.putaranAktif : 3;
+    const isDarkActive = document.body.classList.contains("dark-theme");
+    
+    const exportWrapper = document.createElement("div");
+    exportWrapper.className = "export-mode";
+    if (isDarkActive) {
+      exportWrapper.className += ' dark-theme';
+    }
+    exportWrapper.style.position = "fixed";
+    exportWrapper.style.left = "-9999px";
+    exportWrapper.style.top = "0";
+    exportWrapper.style.width = "900px";
+    
+    const headerClone = document.getElementById("export-header-section").cloneNode(true);
+    headerClone.querySelectorAll(".btn-action-circle, .btn-header-rect").forEach(el => el.remove());
+    exportWrapper.appendChild(headerClone);
+    
+    const subTitle = document.createElement("h2");
+    subTitle.style.textAlign = "center";
+    subTitle.style.margin = "1.5rem 0";
+    subTitle.style.color = "var(--text-main)";
+    subTitle.style.fontSize = "1.25rem";
+    subTitle.style.textTransform = "uppercase";
+    subTitle.textContent = `JADWAL RONDA - ${activeMonth}`;
+    
+    const gridLayout = document.createElement("div");
+    gridLayout.className = "export-bulan-layout";
+    
+    const activeCards = document.querySelectorAll("#jadwal-grid .card");
+    if (activeCards.length === 0) {
+      throw new Error("Tidak ada data jadwal untuk disalin!");
+    }
+    activeCards.forEach(card => {
+      const cardClone = card.cloneNode(true);
+      cardClone.querySelectorAll(".export-hide").forEach(el => el.remove());
+      gridLayout.appendChild(cardClone);
+    });
+    
+    exportWrapper.appendChild(subTitle);
+    exportWrapper.appendChild(gridLayout);
+    
+    document.body.appendChild(exportWrapper);
+    
+    await new Promise(resolve => setTimeout(resolve, 400));
+    
+    const canvas = await html2canvas(exportWrapper, {
+      scale: 2,
+      backgroundColor: isDarkActive ? "#0b0f19" : "#f8fafc",
+      useCORS: true
+    });
+    
+    document.body.removeChild(exportWrapper);
+    
+    canvas.toBlob(async blob => {
+      if (!blob) throw new Error("Gagal membuat data gambar");
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({ "image/png": blob })
+        ]);
+        showToast("Gambar jadwal bulan aktif berhasil disalin!");
+      } catch (clipErr) {
+        console.warn("Clipboard API blocked. Downloading image...", clipErr);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const cleanMonthName = activeMonth.replace(/\s+/g, '-').toLowerCase();
+        a.download = `ronda-putaran${putaranNo}-${cleanMonthName}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("Gambar jadwal diunduh otomatis.");
+      }
+    }, 'image/png');
+    
+  } catch (err) {
+    console.error("Gagal menyalin gambar jadwal:", err);
+    alert("Gagal menyalin gambar jadwal: " + err.message);
   } finally {
     button.innerHTML = originalHTML;
     button.disabled = false;
@@ -632,7 +910,6 @@ async function downloadScreenshot(type) {
     let filename = "";
     let width = "1200px";
     
-    // Buat container ekspor sementara
     const exportWrapper = document.createElement("div");
     exportWrapper.className = "export-mode";
     if (isDarkActive) {
@@ -642,12 +919,10 @@ async function downloadScreenshot(type) {
     exportWrapper.style.left = "-9999px";
     exportWrapper.style.top = "0";
     
-    // Clone header utama
     const headerClone = document.getElementById("export-header-section").cloneNode(true);
-    headerClone.querySelectorAll(".btn-action-circle").forEach(el => el.remove());
+    headerClone.querySelectorAll(".btn-action-circle, .btn-header-rect").forEach(el => el.remove());
     exportWrapper.appendChild(headerClone);
     
-    // Sub-title
     const subTitle = document.createElement("h2");
     subTitle.style.textAlign = "center";
     subTitle.style.margin = "1.5rem 0";
@@ -724,9 +999,6 @@ async function downloadScreenshot(type) {
 // APPLICATION INITIALIZATION
 // ==========================================================================
 
-/**
- * Ambil data dari server GAS atau fallback mockup
- */
 async function loadData() {
   const loadingOverlay = document.getElementById("loading-overlay");
   const errorContainer = document.getElementById("error-container");
@@ -744,7 +1016,6 @@ async function loadData() {
       globalConfig = MOCK_CONFIG;
       allGroups = processRawJadwal(MOCK_JADWAL.data);
       
-      // Tambahkan banner kecil info Demo jika belum ada
       if (!document.getElementById("demo-banner")) {
         const demoIndicator = document.createElement("div");
         demoIndicator.id = "demo-banner";
@@ -772,16 +1043,15 @@ async function loadData() {
       allGroups = processRawJadwal(rawJadwal.data);
     }
     
-    // Cari Ronda Terdekat
     rondaTerdekatGroup = findRondaTerdekat(allGroups);
     
     // RENDER SEMUA KOMPONEN
     renderHeader(globalConfig);
     renderRondaTerdekat(rondaTerdekatGroup);
+    renderStats();
     renderFilterBulan(allGroups);
     renderJadwalGrid(activeMonth);
     
-    // Tampilkan App Container
     loadingOverlay.style.display = "none";
     appContainer.style.display = "block";
     
@@ -799,7 +1069,6 @@ async function loadData() {
 // ==========================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Inisialisasi tema
   initTheme();
   
   document.getElementById("btn-retry").addEventListener("click", loadData);
@@ -811,6 +1080,21 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn-export-putaran").addEventListener("click", () => {
     downloadScreenshot("putaran");
   });
+  
+  const refreshBtn = document.getElementById("btn-refresh-data");
+  if (refreshBtn) {
+    refreshBtn.addEventListener("click", () => {
+      loadData();
+      showToast("Data ronda berhasil dimuat ulang!");
+    });
+  }
+  
+  const copyMainBtn = document.getElementById("btn-copy-jadwal-main");
+  if (copyMainBtn) {
+    copyMainBtn.addEventListener("click", () => {
+      copyJadwalMainToClipboard(copyMainBtn);
+    });
+  }
   
   loadData();
 });
