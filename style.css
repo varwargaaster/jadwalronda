@@ -2,51 +2,76 @@
    DESIGN SYSTEM & VARIABLES (Jadwal Ronda Villa Aster Residence)
    ========================================================================== */
 :root {
-  /* Colors */
+  /* Light Theme (Default) */
+  --bg-main: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-solid: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  
+  --border-light: #e2e8f0;
+  --border-medium: #cbd5e1;
+  --border-accent: rgba(99, 102, 241, 0.2);
+  
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+  
+  --primary: #4f46e5; /* Indigo */
+  --primary-hover: #3730a3;
+  --primary-light: #e0e7ff;
+  
+  --success: #059669; /* Emerald */
+  --success-light: #d1fae5;
+  --warning: #d97706; /* Amber */
+  --warning-light: #fef3c7;
+  --danger: #dc2626; /* Rose */
+  --danger-light: #fee2e2;
+  
+  /* Shadow & Blur */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  --glass-blur: blur(8px);
+  
+  /* Typography */
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Dark Theme Overrides */
+.dark-theme {
   --bg-main: #0b0f19;
   --bg-surface: #121826;
   --bg-card: rgba(26, 34, 54, 0.6);
   --bg-card-solid: #171e30;
   --bg-card-hover: rgba(36, 48, 77, 0.8);
-
+  
   --border-light: rgba(255, 255, 255, 0.08);
   --border-medium: rgba(255, 255, 255, 0.15);
   --border-accent: rgba(99, 102, 241, 0.3);
-
+  
   --text-main: #f3f4f6;
   --text-muted: #9ca3af;
   --text-inverse: #0b0f19;
-
+  
   --primary: #6366f1;
-  /* Indigo */
   --primary-hover: #4f46e5;
   --primary-light: rgba(99, 102, 241, 0.1);
-
+  
   --success: #10b981;
-  /* Emerald */
   --success-light: rgba(16, 185, 129, 0.1);
   --warning: #f59e0b;
-  /* Amber */
   --warning-light: rgba(245, 158, 11, 0.1);
   --danger: #ef4444;
-  /* Rose */
   --danger-light: rgba(239, 68, 68, 0.1);
-
-  /* Shadow & Blur */
+  
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
-  --glass-blur: blur(12px);
-
-  /* Typography */
-  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* ==========================================================================
    RESET & BASE STYLES
    ========================================================================== */
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -60,6 +85,7 @@ body {
   padding-bottom: 2rem;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Scrollbar Styling */
@@ -67,18 +93,15 @@ body {
   width: 8px;
   height: 6px;
 }
-
 ::-webkit-scrollbar-track {
   background: var(--bg-main);
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #242f4c;
+  background: var(--border-medium);
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #313f66;
+  background: var(--text-muted);
 }
 
 /* ==========================================================================
@@ -117,21 +140,11 @@ body {
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
-
 @keyframes pulse-text {
-
-  0%,
-  100% {
-    opacity: 0.6;
-  }
-
-  50% {
-    opacity: 1;
-  }
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
 .error-container {
@@ -173,7 +186,7 @@ body {
 
 .btn-retry {
   background-color: var(--danger);
-  color: var(--text-main);
+  color: var(--text-inverse);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -193,20 +206,13 @@ body {
 .app-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 1rem;
   animation: fadeIn 0.4s ease-out;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================================================
@@ -214,83 +220,85 @@ body {
    ========================================================================== */
 .main-header {
   text-align: center;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, rgba(18, 24, 38, 0.8) 0%, rgba(11, 15, 25, 0.8) 100%);
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background-color: var(--bg-surface);
   border: 1px solid var(--border-light);
   border-radius: 16px;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .logo-wrapper {
   display: flex;
   justify-content: center;
   gap: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .logo-img {
-  height: 48px;
+  height: 44px;
   object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .main-header h1 {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  margin-bottom: 1rem;
-  background: linear-gradient(to right, #ffffff, #c7d2fe);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.75rem;
+  color: var(--text-main);
 }
 
 .putaran-badge-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .putaran-badge {
   background-color: var(--primary-light);
   border: 1px solid var(--border-accent);
-  color: #a5b4fc;
-  padding: 0.35rem 1rem;
+  color: var(--primary);
+  padding: 0.3rem 0.85rem;
   border-radius: 99px;
-  font-weight: 700;
-  font-size: 0.85rem;
+  font-weight: 800;
+  font-size: 0.8rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .btn-action-circle {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--bg-main);
   border: 1px solid var(--border-light);
-  color: var(--text-main);
+  color: var(--text-muted);
   display: inline-flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 40px;
+  min-width: 40px;
 }
 
 .btn-action-circle:hover {
   background-color: var(--primary);
   border-color: var(--primary);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  color: var(--text-inverse);
+  transform: translateY(-1px);
+}
+
+.btn-action-circle .svg-sun {
+  color: #f59e0b;
 }
 
 .svg-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
 /* ==========================================================================
@@ -308,128 +316,154 @@ body {
 }
 
 .section-title {
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1.05rem;
+  font-weight: 800;
   letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--text-main);
+}
+
+.grid-section {
+  margin-bottom: 2.5rem;
+}
+
+.grid-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--primary);
+  padding-left: 0.75rem;
+}
+
+.grid-section-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 /* ==========================================================================
    CARD RONDA TERDEKAT
    ========================================================================== */
 .ronda-terdekat-section {
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 }
 
 .ronda-terdekat-card {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(26, 34, 54, 0.6) 100%);
-  border: 1px dashed var(--primary);
-  border-radius: 20px;
-  padding: 1.5rem;
+  background-color: var(--bg-surface);
+  border: 2px solid var(--primary);
+  border-radius: 16px;
+  padding: 1.25rem;
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  backdrop-filter: var(--glass-blur);
 }
 
-.ronda-terdekat-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background-color: var(--primary);
+/* ==========================================================================
+   CARD STYLING (MATCHING THE ATTACHED DESIGN)
+   ========================================================================== */
+.card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  padding: 1.25rem;
+  position: relative;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-lg);
 }
 
 /* Card Header */
 .card-header-main {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1.25rem;
+  align-items: center;
+  margin-bottom: 1rem;
   position: relative;
 }
 
-.group-info-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.group-number-label {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text-main);
+.group-title-container {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
+.group-title-label {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.group-name-text {
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.btn-copy-card-inline {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  vertical-align: middle;
+  min-height: 32px;
+  min-width: 32px;
+}
+
+.btn-copy-card-inline:hover {
+  color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+.svg-icon-inline {
+  width: 18px;
+  height: 18px;
+}
+
 .group-type-badge {
-  font-size: 0.75rem;
-  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 4px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .group-type-badge.hutang {
   background-color: var(--danger-light);
-  color: #fda4af;
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.1);
 }
 
 .group-type-badge.reguler {
   background-color: var(--primary-light);
-  color: #a5b4fc;
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  color: var(--primary);
+  border: 1px solid rgba(99, 102, 241, 0.1);
 }
 
-.group-name-subtitle {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  margin-top: 0.15rem;
-}
-
-.card-actions-wrapper {
+/* Card Metadata Rows */
+.card-meta-list {
   display: flex;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
 }
 
-.btn-card-action {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-light);
-  color: var(--text-main);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-card-action:hover {
-  background-color: var(--primary-light);
-  border-color: var(--primary);
-  color: #a5b4fc;
-}
-
-/* Card Metadata (Date, Location, Countdown) */
-.card-meta-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-  background-color: rgba(0, 0, 0, 0.2);
-  padding: 1rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-light);
-}
-
-.meta-item {
+.meta-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -437,118 +471,185 @@ body {
   color: var(--text-main);
 }
 
-.meta-item.location-link {
-  color: #818cf8;
+.meta-row strong {
+  font-weight: 700;
+}
+
+.meta-row.link-maps {
+  color: var(--primary);
   text-decoration: none;
   cursor: pointer;
-  transition: color 0.2s ease;
 }
 
-.meta-item.location-link:hover {
-  color: #a5b4fc;
+.meta-row.link-maps:hover {
   text-decoration: underline;
 }
 
-.countdown-badge {
+.meta-icon {
+  font-size: 1rem;
+  color: var(--text-muted);
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-weight: 700;
-  font-size: 0.85rem;
+  width: 20px;
 }
 
-.countdown-badge.today {
+.countdown-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.countdown-pill.today {
+  background-color: var(--success-light);
+  color: var(--success);
+}
+.countdown-pill.upcoming {
+  background-color: var(--warning-light);
+  color: var(--warning);
+}
+.countdown-pill.past {
+  background-color: var(--success-light);
   color: var(--success);
 }
 
-.countdown-badge.upcoming {
-  color: var(--warning);
+/* Dividers */
+.card-divider {
+  height: 1px;
+  background-color: var(--border-light);
+  margin: 0.85rem 0;
 }
 
-.countdown-badge.past {
+/* DANRU Row */
+.danru-banner-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  padding: 0.15rem 0;
+}
+
+.danru-banner-row strong {
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.danru-banner-icon {
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+/* Member List Header */
+.member-list-header {
+  font-size: 0.75rem;
+  font-weight: 800;
   color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
 }
 
-/* Participant List Table */
-.participants-table-wrapper {
-  width: 100%;
-  overflow-x: auto;
+/* Member List Rows (Flex-based) */
+.member-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.participants-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
+.member-row-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.02);
 }
 
-.participants-table tr {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+.dark-theme .member-row-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
 }
 
-.participants-table tr:last-child {
+.member-row-item:last-child {
   border-bottom: none;
 }
 
-.participants-table td {
-  padding: 0.65rem 0.5rem;
-  font-size: 0.85rem;
-  vertical-align: middle;
+.member-left-info {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
 }
 
-.participants-table .col-blok {
+.member-blok-tag {
+  font-family: monospace;
   font-weight: 700;
-  color: #818cf8;
-  width: 60px;
+  color: var(--text-muted);
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-light);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  min-width: 44px;
+  text-align: center;
 }
 
-.participants-table .col-nama {
+.member-nama-text {
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-main);
 }
 
-.participants-table .col-danru {
-  width: 80px;
+.member-right-badges {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
 }
 
-.danru-badge {
-  background-color: var(--warning-light);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  color: #fcd34d;
-  font-size: 0.75rem;
-  padding: 0.1rem 0.4rem;
-  border-radius: 4px;
+.member-badge-item {
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  text-transform: uppercase;
 }
 
-.participants-table .col-wilayah {
+.member-badge-item.danru {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.member-badge-item.wilayah {
+  background-color: var(--bg-main);
   color: var(--text-muted);
-  text-align: right;
-  font-size: 0.8rem;
-  font-weight: 500;
+  border: 1px solid var(--border-light);
 }
 
 /* Hutang Info Box */
-.debt-info-row td {
-  padding-top: 0 !important;
-  padding-bottom: 0.75rem !important;
+.debt-info-row-container {
+  padding-bottom: 0.5rem;
 }
 
 .debt-info-box {
-  background-color: rgba(239, 68, 68, 0.05);
+  background-color: var(--danger-light);
   border: 1px solid rgba(239, 68, 68, 0.15);
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
+  padding: 0.4rem 0.65rem;
+  border-radius: 6px;
   font-size: 0.75rem;
-  color: #fda4af;
-  margin-top: 0.25rem;
+  color: var(--danger);
+  margin-top: 0.15rem;
   display: flex;
   align-items: center;
   gap: 0.35rem;
 }
 
 .debt-icon {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 /* ==========================================================================
@@ -573,79 +674,55 @@ body {
 
 .filter-bulan-tabs {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.65rem;
   overflow-x: auto;
   white-space: nowrap;
-  padding-bottom: 0.75rem;
-  /* Menyembunyikan scrollbar bawaan untuk tampilan mobile yang premium */
+  padding-bottom: 0.5rem;
   -scrollbar-width: none;
-  /* Firefox */
   -ms-overflow-style: none;
-  /* IE and Edge */
 }
 
 .filter-bulan-tabs::-webkit-scrollbar {
   display: none;
-  /* Chrome, Safari and Opera */
 }
 
 .btn-filter-tab {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-light);
   color: var(--text-muted);
-  padding: 0.75rem 1.5rem;
+  padding: 0.65rem 1.25rem;
   border-radius: 99px;
   font-family: var(--font-family);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   min-height: 44px;
-  /* Tap target minimum */
 }
 
 .btn-filter-tab:hover {
   border-color: var(--border-medium);
   color: var(--text-main);
-  background-color: rgba(255, 255, 255, 0.02);
 }
 
 .btn-filter-tab.active {
   background-color: var(--primary);
   border-color: var(--primary);
   color: var(--text-inverse);
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
 }
 
 /* ==========================================================================
    MAIN CARDS GRID
    ========================================================================== */
 .main-content {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .jadwal-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-.card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-light);
-  border-radius: 16px;
-  padding: 1.25rem;
-  position: relative;
-  transition: all 0.25s ease;
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: var(--glass-blur);
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-medium);
-  box-shadow: var(--shadow-lg);
-  background-color: var(--bg-card-hover);
+  gap: 1.25rem;
 }
 
 /* ==========================================================================
@@ -653,7 +730,7 @@ body {
    ========================================================================== */
 .main-footer {
   text-align: center;
-  padding: 2rem 0;
+  padding: 1.5rem 0;
   border-top: 1px solid var(--border-light);
   color: var(--text-muted);
   font-size: 0.8rem;
@@ -667,13 +744,13 @@ body {
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%) translateY(100px);
-  background-color: #1f2937;
-  color: #fff;
+  background-color: var(--text-main);
+  color: var(--bg-main);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-size: 0.85rem;
-  font-weight: 600;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+  box-shadow: var(--shadow-lg);
   z-index: 10000;
   opacity: 0;
   pointer-events: none;
@@ -689,13 +766,10 @@ body {
 /* ==========================================================================
    HTML2CANVAS EXPORT SPECIFIC ADJUSTMENTS
    ========================================================================== */
-/* Elemen dengan kelas ini disembunyikan sementara selama screenshot diambil */
 .export-hide {
   display: none !important;
 }
 
-/* Class pembungkus ketika mode screenshot sedang aktif untuk menjamin detail
-   rendisi html2canvas agar solid, kontras, dan tidak transparan */
 .export-mode {
   background-color: var(--bg-main) !important;
 }
@@ -707,23 +781,22 @@ body {
   background: var(--bg-card-solid) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  border: 1px solid #202b44 !important;
-  border-radius: 12px !important;
+  border: 1px solid var(--border-medium) !important;
   box-shadow: none !important;
 }
 
-.export-mode .card-meta-grid {
-  background-color: #0b0f19 !important;
-  border: 1px solid #202b44 !important;
+.export-mode .member-blok-tag {
+  background-color: var(--bg-main) !important;
+  border: 1px solid var(--border-light) !important;
 }
 
-.export-mode .participants-table tr {
-  border-bottom: 1px solid #202b44 !important;
+.export-mode .member-badge-item.wilayah {
+  background-color: var(--bg-main) !important;
+  border: 1px solid var(--border-light) !important;
 }
 
-.export-mode .debt-info-box {
-  background-color: rgba(239, 68, 68, 0.08) !important;
-  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+.export-mode .countdown-pill {
+  border: 1px solid var(--border-light) !important;
 }
 
 /* Layout satu putaran saat di-export agar card berjejer rapi di gambar */
@@ -750,19 +823,17 @@ body {
 /* Tablet Portrait keatas */
 @media (min-width: 640px) {
   .app-container {
-    padding: 2rem;
+    padding: 1.5rem;
+  }
+  
+  .main-header {
+    padding: 1.5rem;
   }
 
   .main-header h1 {
-    font-size: 1.85rem;
+    font-size: 1.75rem;
   }
-
-  .card-meta-grid {
-    grid-template-columns: repeat(3, 1fr);
-    align-items: center;
-    gap: 1rem;
-  }
-
+  
   .jadwal-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -771,11 +842,11 @@ body {
 /* Desktop */
 @media (min-width: 1024px) {
   .app-container {
-    padding: 2.5rem;
+    padding: 2rem;
   }
 
   .main-header h1 {
-    font-size: 2.25rem;
+    font-size: 2rem;
   }
 
   .jadwal-grid {
