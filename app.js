@@ -9,6 +9,7 @@
 // Contoh: "https://script.google.com/macros/s/AKfycbz1-Z_XxxYYY.../exec"
 const API_URL = "https://script.google.com/macros/s/AKfycbyHzOfCv1uAUm4fhHWIG_vT74UTYR7cA6XFoYAkTkOcg_4gaY0eKmn7aOKw-1eYa4zQ/exec";
 
+
 // Data Mockup untuk uji coba lokal & demonstrasi jika API_URL belum dikonfigurasi
 const MOCK_CONFIG = {
   status: "ok",
@@ -448,12 +449,12 @@ function createRondaTerdekatHTML(group, isExportMode = false) {
       </div>
       ${!isExportMode ? `
         <button id="btn-toggle-members-accordeon" class="btn-ronda-terdekat-accordeon export-hide" onclick="toggleRondaTerdekatMembers()">
-          <span>Lihat Detail Anggota</span> <span>↓</span>
+          <span>Sembunyikan Anggota</span> <span>↑</span>
         </button>
       ` : ''}
     </div>
     
-    <div id="ronda-terdekat-accordeon" class="ronda-terdekat-accordeon" style="display: ${isExportMode ? 'block' : 'none'};">
+    <div id="ronda-terdekat-accordeon" class="ronda-terdekat-accordeon" style="display: block;">
       <div class="member-list-header" style="color: rgba(255,255,255,0.75);">Daftar Anggota (${group.members.length} Orang)</div>
       <div class="member-list">
         ${memberRowsHTML}
