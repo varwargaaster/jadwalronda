@@ -219,9 +219,8 @@ body {
    HEADER
    ========================================================================== */
 .main-header {
-  text-align: center;
   margin-bottom: 1.5rem;
-  padding: 1.25rem;
+  padding: 1.5rem;
   background-color: var(--bg-surface);
   border: 1px solid var(--border-light);
   border-radius: 16px;
@@ -230,43 +229,75 @@ body {
   box-shadow: var(--shadow-sm);
 }
 
+.header-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.header-left-info {
+  flex: 1;
+  min-width: 290px;
+}
+
 .logo-wrapper {
   display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-bottom: 0.75rem;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .logo-img {
-  height: 44px;
+  height: 40px;
   object-fit: contain;
 }
 
 .main-header h1 {
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  margin-bottom: 0.75rem;
   color: var(--text-main);
 }
 
-.putaran-badge-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+.header-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-top: 0.25rem;
 }
 
-.putaran-badge {
-  background-color: var(--primary-light);
-  border: 1px solid var(--border-accent);
-  color: var(--primary);
-  padding: 0.3rem 0.85rem;
-  border-radius: 99px;
-  font-weight: 800;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+.header-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-header-rect {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 40px;
+  font-family: var(--font-family);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-header-rect:hover {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--text-inverse);
 }
 
 .btn-action-circle {
@@ -289,7 +320,6 @@ body {
   background-color: var(--primary);
   border-color: var(--primary);
   color: var(--text-inverse);
-  transform: translateY(-1px);
 }
 
 .btn-action-circle .svg-sun {
@@ -299,6 +329,91 @@ body {
 .svg-icon {
   width: 18px;
   height: 18px;
+}
+
+.putaran-badge-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.putaran-badge {
+  background-color: var(--primary-light);
+  border: 1px solid var(--border-accent);
+  color: var(--primary);
+  padding: 0.3rem 0.85rem;
+  border-radius: 99px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .header-top-row {
+    flex-direction: column;
+    text-align: center;
+  }
+  .logo-wrapper {
+    justify-content: center;
+  }
+  .header-right-actions {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   STATS BANNER SECTION
+   ========================================================================== */
+.stats-banner-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+  gap: 1rem;
+}
+
+.stats-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.stats-item strong {
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.stats-item .stats-label-debt strong {
+  color: var(--danger);
+}
+
+.stats-item .stats-label-reg strong {
+  color: var(--success);
+}
+
+.stats-icon {
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .stats-banner-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    justify-content: flex-start;
+  }
 }
 
 /* ==========================================================================
@@ -345,20 +460,195 @@ body {
 }
 
 /* ==========================================================================
-   CARD RONDA TERDEKAT
+   CARD RONDA TERDEKAT (DARK TEAL REFERENCE LOOK)
    ========================================================================== */
 .ronda-terdekat-section {
   margin-bottom: 2rem;
 }
 
 .ronda-terdekat-card {
-  background-color: var(--bg-surface);
-  border: 2px solid var(--primary);
+  background: linear-gradient(135deg, #065f46 0%, #047857 100%) !important;
+  border: none !important;
+  color: #ffffff !important;
   border-radius: 16px;
-  padding: 1.25rem;
+  padding: 1.5rem;
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-lg);
+}
+
+.ronda-terdekat-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.ronda-terdekat-badge {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 99px;
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ronda-terdekat-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.ronda-terdekat-putaran-label {
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.ronda-terdekat-title-container {
+  margin-bottom: 1rem;
+}
+
+.ronda-terdekat-group-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.ronda-terdekat-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  background-color: rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (min-width: 640px) {
+  .ronda-terdekat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.ronda-terdekat-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.ronda-terdekat-meta-item strong {
+  font-weight: 700;
+}
+
+.ronda-terdekat-meta-item.link-maps {
+  color: #a7f3d0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ronda-terdekat-meta-item.link-maps:hover {
+  text-decoration: underline;
+}
+
+.ronda-terdekat-bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.ronda-terdekat-countdown {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.btn-ronda-terdekat-accordeon {
+  background-color: #ffffff;
+  color: #065f46;
+  border: none;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 40px;
+  transition: all 0.2s ease;
+  font-family: var(--font-family);
+}
+
+.btn-ronda-terdekat-accordeon:hover {
+  background-color: #f1f5f9;
+  transform: translateY(-1px);
+}
+
+.ronda-terdekat-accordeon {
+  margin-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 1.25rem;
+}
+
+/* Ronda Terdekat Card Content styling overrides (both standard and export mode) */
+.ronda-terdekat-card,
+.ronda-terdekat-card .member-nama-text,
+.ronda-terdekat-card .ronda-terdekat-meta-item,
+.ronda-terdekat-card .ronda-terdekat-countdown,
+.ronda-terdekat-card .ronda-terdekat-countdown span {
+  color: #ffffff !important;
+}
+
+.ronda-terdekat-card .member-row-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.ronda-terdekat-card .member-row-item:last-child {
+  border-bottom: none !important;
+}
+
+.ronda-terdekat-card .member-blok-tag {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.ronda-terdekat-card .member-badge-item.danru {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.ronda-terdekat-card .member-badge-item.wilayah {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+.ronda-terdekat-card .btn-copy-card-inline:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.card-header-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 /* ==========================================================================
@@ -393,7 +683,7 @@ body {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .group-title-label {
@@ -713,7 +1003,7 @@ body {
 }
 
 /* ==========================================================================
-   MAIN CARDS GRID
+   MAIN CARDS GRID (MAX 3 CARDS PER ROW - AUTO WRAP)
    ========================================================================== */
 .main-content {
   margin-bottom: 2rem;
@@ -797,6 +1087,17 @@ body {
 
 .export-mode .countdown-pill {
   border: 1px solid var(--border-light) !important;
+}
+
+.export-mode .ronda-terdekat-card {
+  background: linear-gradient(135deg, #065f46 0%, #047857 100%) !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
+.export-mode .ronda-terdekat-grid {
+  background-color: rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Layout satu putaran saat di-export agar card berjejer rapi di gambar */
