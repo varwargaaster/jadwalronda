@@ -96,6 +96,22 @@ function formatIndonesianDate(dateStr) {
   return `${dayName}, ${dayNum} ${monthName} ${year}`;
 }
 
+function formatIndonesianDateWithoutDay(dateStr) {
+  const date = parseDateString(dateStr);
+  if (!date || isNaN(date.getTime())) return dateStr;
+  
+  const monthNames = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+  
+  const dayNum = date.getDate();
+  const monthName = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+  
+  return `${dayNum} ${monthName} ${year}`;
+}
+
 function getMonthYearLabel(dateStr) {
   const date = parseDateString(dateStr);
   if (!date || isNaN(date.getTime())) return "";
@@ -296,12 +312,12 @@ function createCardHTML(group, isExportMode = false) {
     `;
     
     if (group.jenis.toLowerCase() === "hutang" && (member.tanggalTidakRonda || member.alasanTidakHadir)) {
-      const reasonStr = member.alasanTidakHadir ? ` · ${member.alasanTidakHadir}` : "";
+      const formattedDebtDate = formatIndonesianDateWithoutDay(member.tanggalTidakRonda);
+      const reasonStr = member.alasanTidakHadir ? `: ${member.alasanTidakHadir}` : "";
       memberRowsHTML += `
         <div class="debt-info-row-container">
           <div class="debt-info-box">
-            <span class="debt-icon">⚠️</span>
-            <span>Tidak hadir: ${member.tanggalTidakRonda || "-"}${reasonStr}</span>
+            <span>📅 ${formattedDebtDate}${reasonStr}</span>
           </div>
         </div>
       `;
@@ -407,13 +423,13 @@ function createRondaTerdekatHTML(group, isExportMode = false) {
       <div class="ronda-terdekat-header-right">
         ${!isExportMode ? `
           <div class="card-actions-wrapper export-exclude" style="display: inline-flex; gap: 0.25rem; margin-right: 0.75rem; vertical-align: middle;">
-            <button class="btn-copy-card-inline" style="color: #ffffff; background-color: rgba(255, 255, 255, 0.1);" onclick="copyCardToClipboard('${cardId}', this)" title="Salin Card Gambar">
+            <button class="btn-copy-card-inline" onclick="copyCardToClipboard('${cardId}', this)" title="Salin Card Gambar">
               <svg viewBox="0 0 24 24" class="svg-icon-inline" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
               </svg>
             </button>
-            <button class="btn-copy-card-inline" style="color: #ffffff; background-color: rgba(255, 255, 255, 0.1);" onclick="downloadCardScreenshot('${cardId}', this, '${group.groupNumber}')" title="Download Gambar Card">
+            <button class="btn-copy-card-inline" onclick="downloadCardScreenshot('${cardId}', this, '${group.groupNumber}')" title="Download Gambar Card">
               <svg viewBox="0 0 24 24" class="svg-icon-inline" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                 <circle cx="12" cy="13" r="4"></circle>
@@ -805,11 +821,10 @@ async function downloadCardScreenshot(cardId, button, groupNumber) {
 async function copyJadwalMainToClipboard(button) {
   const originalHTML = button.innerHTML;
   button.innerHTML = `
-    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation: spin 1s linear infinite; margin-right: 0.5rem;">
+    <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation: spin 1s linear infinite;">
       <circle cx="12" cy="12" r="10" stroke="rgba(0,0,0,0.1)"></circle>
       <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
     </svg>
-    <span>Menyiapkan...</span>
   `;
   button.disabled = true;
   
