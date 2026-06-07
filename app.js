@@ -14,7 +14,7 @@ const MOCK_CONFIG = {
   status: "ok",
   mulaiRonda: "01/08/2026",
   judulHeader: "Jadwal Ronda Warga Villa Aster Residence",
-  logoPaguyuban: "", // Kosongkan jika tidak ada, sistem akan menyesuaikan
+  logoPaguyuban: "", 
   logoPerumahan: "",
   footerCopy: "Villa Aster Residence © 2026. Aman, Tertib, Rukun.",
   jumlahGroupHutangRonda: 2,
@@ -98,7 +98,7 @@ function parseDateString(dateStr) {
 }
 
 /**
- * Format tanggal ke nama hari & bulan bahasa Indonesia (misal: Sabtu, 09 Agustus 2026)
+ * Format tanggal ke nama hari & bulan bahasa Indonesia (misal: Sabtu, 16 Mei 2026)
  */
 function formatIndonesianDate(dateStr) {
   const date = parseDateString(dateStr);
@@ -115,7 +115,7 @@ function formatIndonesianDate(dateStr) {
   const monthName = monthNames[date.getMonth()];
   const year = date.getFullYear();
   
-  return `${dayName}, ${String(dayNum).padStart(2, '0')} ${monthName} ${year}`;
+  return `${dayName}, ${dayNum} ${monthName} ${year}`;
 }
 
 /**
@@ -206,7 +206,6 @@ function findRondaTerdekat(groups) {
   });
   
   if (upcomingGroups.length > 0) {
-    // Karena sudah diurutkan menaik, baris pertama adalah yang terdekat ke depan
     return upcomingGroups[0];
   }
   
@@ -228,11 +227,12 @@ function getCountdownStatus(dateStr) {
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   
   if (diffDays === 0) {
-    return { text: "Hari ini!", class: "today", html: "🟢 Hari ini!" };
+    return { text: "Ronda dilaksanakan hari ini!", class: "today", html: "🟢 Ronda dilaksanakan hari ini!" };
   } else if (diffDays > 0) {
-    return { text: `${diffDays} hari lagi`, class: "upcoming", html: `🕐 ${diffDays} hari lagi` };
+    return { text: `${diffDays} hari lagi`, class: "upcoming", html: `🕐 Ronda dilaksanakan ${diffDays} hari lagi` };
   } else {
-    return { text: "Sudah terlaksana", class: "past", html: "✅ Sudah terlaksana" };
+    const pastDays = Math.abs(diffDays);
+    return { text: `Ronda sudah terlaksana ${pastDays} hari lalu`, class: "past", html: `✔ Ronda sudah terlaksana ${pastDays} hari lalu` };
   }
 }
 
@@ -267,44 +267,48 @@ function renderHeader(config) {
 }
 
 /**
- * Menghasilkan markup HTML untuk sebuah Card Group
+ * Menghasilkan markup HTML untuk sebuah Card Group (Dibuat persis seperti gambar referensi)
  */
-function createCardHTML(group, isExportMode = false) {
+function createCardHTML(group, isExportMode = false, isTerdekat = false) {
   const countdown = getCountdownStatus(group.tanggal);
-  const cardId = `group-card-${group.groupNumber}`;
+  const cardId = isTerdekat ? `terdekat-card-${group.groupNumber}` : `group-card-${group.groupNumber}`;
   const formattedDate = formatIndonesianDate(group.tanggal);
   const mapLink = group.linkMaps ? `href="${group.linkMaps}" target="_blank" rel="noopener"` : '';
-  const mapClass = group.linkMaps ? 'meta-item location-link' : 'meta-item';
   const typeBadgeClass = group.jenis.toLowerCase() === "hutang" ? "hutang" : "reguler";
+  
+  // Ambil nama DANRU
+  const danruMember = group.members.find(m => m.danru === "Ya");
+  const danruName = danruMember ? danruMember.nama : "-";
   
   let memberRowsHTML = "";
   group.members.forEach(member => {
     const isDanru = member.danru === "Ya";
-    const danruBadge = isDanru ? `<span class="danru-badge">DANRU</span>` : "";
+    const danruBadge = isDanru ? `<span class="member-badge-item danru">DANRU</span>` : "";
     const nameText = isDanru ? `<strong>${member.nama}</strong>` : member.nama;
     
     memberRowsHTML += `
-      <tr>
-        <td class="col-blok">${member.blok || "-"}</td>
-        <td class="col-nama">
-          ${nameText} ${danruBadge}
-        </td>
-        <td class="col-wilayah">${member.wilayah || "-"}</td>
-      </tr>
+      <div class="member-row-item">
+        <div class="member-left-info">
+          <span class="member-blok-tag">${member.blok || "-"}</span>
+          <span class="member-nama-text">${nameText}</span>
+        </div>
+        <div class="member-right-badges">
+          ${danruBadge}
+          <span class="member-badge-item wilayah">${member.wilayah || "-"}</span>
+        </div>
+      </div>
     `;
     
     // Tampilkan informasi detail jika tipe adalah Hutang dan memiliki data absen
     if (group.jenis.toLowerCase() === "hutang" && (member.tanggalTidakRonda || member.alasanTidakHadir)) {
       const reasonStr = member.alasanTidakHadir ? ` · ${member.alasanTidakHadir}` : "";
       memberRowsHTML += `
-        <tr class="debt-info-row">
-          <td colspan="3">
-            <div class="debt-info-box">
-              <span class="debt-icon">⚠️</span>
-              <span>Tidak hadir: ${member.tanggalTidakRonda || "-"}${reasonStr}</span>
-            </div>
-          </td>
-        </tr>
+        <div class="debt-info-row-container">
+          <div class="debt-info-box">
+            <span class="debt-icon">⚠️</span>
+            <span>Tidak hadir: ${member.tanggalTidakRonda || "-"}${reasonStr}</span>
+          </div>
+        </div>
       `;
     }
   });
@@ -312,43 +316,48 @@ function createCardHTML(group, isExportMode = false) {
   return `
     <div class="card" id="${cardId}">
       <div class="card-header-main">
-        <div class="group-info-wrapper">
-          <div class="group-number-label">
-            <span>Group ${group.groupNumber}</span>
-            <span class="group-type-badge ${typeBadgeClass}">${group.jenis}</span>
-          </div>
-          <span class="group-name-subtitle">${group.namaGroup}</span>
-        </div>
-        ${!isExportMode ? `
-          <div class="card-actions-wrapper export-hide">
-            <button class="btn-card-action" onclick="copyCardToClipboard('${cardId}', this)" title="Salin Card Gambar">
-              <svg viewBox="0 0 24 24" class="svg-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="group-title-container">
+          <span class="group-title-label">Grup ${group.groupNumber}</span>
+          <span class="group-name-text">${group.namaGroup}</span>
+          ${!isExportMode ? `
+            <button class="btn-copy-card-inline export-hide" onclick="copyCardToClipboard('${cardId}', this)" title="Salin Card Gambar">
+              <svg viewBox="0 0 24 24" class="svg-icon-inline" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
               </svg>
             </button>
-          </div>
-        ` : ''}
+          ` : ''}
+        </div>
+        <span class="group-type-badge ${typeBadgeClass}">${group.jenis}</span>
       </div>
       
-      <div class="card-meta-grid">
-        <div class="meta-item">
-          📅 ${formattedDate}
+      <div class="card-meta-list">
+        <div class="meta-row">
+          <span class="meta-icon">📅</span>
+          <span>${formattedDate}</span>
         </div>
-        <div class="meta-item">
-          <span class="countdown-badge ${countdown.class}">${countdown.html}</span>
+        <div class="meta-row">
+          <div class="countdown-pill ${countdown.class}">${countdown.html}</div>
         </div>
-        <a ${mapLink} class="${mapClass}">
-          📍 ${group.titikKumpul}
-        </a>
+        <div class="meta-row">
+          <span class="meta-icon">📍</span>
+          <span>Titik Kumpul: ${group.linkMaps ? `<a ${mapLink} class="meta-row link-maps" style="display:inline; padding:0; margin:0;"><strong>${group.titikKumpul}</strong></a>` : `<strong>${group.titikKumpul}</strong>`}</span>
+        </div>
       </div>
       
-      <div class="participants-table-wrapper">
-        <table class="participants-table">
-          <tbody>
-            ${memberRowsHTML}
-          </tbody>
-        </table>
+      <div class="card-divider"></div>
+      
+      <div class="danru-banner-row">
+        <span class="danru-banner-icon">🛡️</span>
+        <span>DANRU: <strong>${danruName}</strong></span>
+      </div>
+      
+      <div class="card-divider"></div>
+      
+      <div class="member-list-header">Daftar Anggota (${group.members.length} Orang)</div>
+      
+      <div class="member-list">
+        ${memberRowsHTML}
       </div>
     </div>
   `;
@@ -364,13 +373,9 @@ function renderRondaTerdekat(group) {
     return;
   }
   
-  // Buat DOM wrapper khusus ronda terdekat agar style pembedanya pas
-  const cardHTML = createCardHTML(group);
+  // Render Ronda Terdekat dengan parameter isTerdekat = true agar ID card berbeda
+  const cardHTML = createCardHTML(group, false, true);
   container.innerHTML = `<div class="ronda-terdekat-card">${cardHTML}</div>`;
-  
-  // Hilangkan tombol salin di card terdekat teratas agar fokus ke jadwal detail bawah
-  const actionBtn = container.querySelector(".card-actions-wrapper");
-  if (actionBtn) actionBtn.remove();
 }
 
 /**
@@ -385,7 +390,6 @@ function renderFilterBulan(groups) {
   groups.forEach(g => {
     const label = getMonthYearLabel(g.tanggal);
     if (label && !monthsMap[label]) {
-      // Dapatkan date object bulan ini untuk pengurutan logis
       monthsMap[label] = parseDateString(g.tanggal);
     }
   });
@@ -402,7 +406,6 @@ function renderFilterBulan(groups) {
     activeMonth = getMonthYearLabel(rondaTerdekatGroup.tanggal);
   }
   
-  // Jika activeMonth tidak ada di daftar bulan (karena kosong), default ke bulan pertama
   if (!activeMonth || !monthsList.includes(activeMonth)) {
     activeMonth = monthsList[0];
   }
@@ -413,7 +416,6 @@ function renderFilterBulan(groups) {
     button.className = `btn-filter-tab ${monthLabel === activeMonth ? 'active' : ''}`;
     button.textContent = monthLabel;
     button.addEventListener("click", () => {
-      // Hapus kelas aktif di tab lain
       tabsContainer.querySelectorAll(".btn-filter-tab").forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
       
@@ -423,12 +425,11 @@ function renderFilterBulan(groups) {
     tabsContainer.appendChild(button);
   });
   
-  // Tampilkan tombol ekspor bulanan karena filter bulan sudah terisi
   document.getElementById("btn-export-bulan").style.display = "inline-flex";
 }
 
 /**
- * Render Grid Jadwal berdasarkan bulan aktif
+ * Render Grid Jadwal berdasarkan bulan aktif (Dipisahkan kelompok Hutang & Reguler)
  */
 function renderJadwalGrid(monthLabel) {
   const gridContainer = document.getElementById("jadwal-grid");
@@ -441,20 +442,100 @@ function renderJadwalGrid(monthLabel) {
     return;
   }
   
-  filteredGroups.forEach(group => {
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = createCardHTML(group);
-    gridContainer.appendChild(tempDiv.firstElementChild);
+  // Pisahkan Grup Hutang & Grup Reguler
+  const hutangGroups = filteredGroups.filter(g => g.jenis.toLowerCase() === "hutang");
+  const regulerGroups = filteredGroups.filter(g => g.jenis.toLowerCase() === "reguler");
+  
+  // 1. Render Grup Hutang Ronda (Jika ada)
+  if (hutangGroups.length > 0) {
+    const hutangSection = document.createElement("div");
+    hutangSection.className = "grid-section";
+    
+    let cardsHTML = "";
+    hutangGroups.forEach(group => {
+      cardsHTML += createCardHTML(group);
+    });
+    
+    hutangSection.innerHTML = `
+      <div class="grid-section-header">
+        <span class="section-emoji">⚠️</span>
+        <h3 class="grid-section-title">Grup Khusus Hutang Ronda</h3>
+      </div>
+      <div class="jadwal-grid">
+        ${cardsHTML}
+      </div>
+    `;
+    gridContainer.appendChild(hutangSection);
+  }
+  
+  // 2. Render Grup Reguler (Jika ada)
+  if (regulerGroups.length > 0) {
+    const regulerSection = document.createElement("div");
+    regulerSection.className = "grid-section";
+    
+    let cardsHTML = "";
+    regulerGroups.forEach(group => {
+      cardsHTML += createCardHTML(group);
+    });
+    
+    regulerSection.innerHTML = `
+      <div class="grid-section-header">
+        <span class="section-emoji">📅</span>
+        <h3 class="grid-section-title">Grup Ronda Reguler</h3>
+      </div>
+      <div class="jadwal-grid">
+        ${cardsHTML}
+      </div>
+    `;
+    gridContainer.appendChild(regulerSection);
+  }
+}
+
+// ==========================================================================
+// THEME TOGGLE FUNCTIONALITY
+// ==========================================================================
+
+function initTheme() {
+  const toggleBtn = document.getElementById("btn-theme-toggle");
+  if (!toggleBtn) return;
+  
+  // Default Light Theme (jika belum tersimpan, set light)
+  const savedTheme = localStorage.getItem("theme") || "light";
+  const isDark = savedTheme === "dark";
+  
+  if (isDark) {
+    document.body.classList.add("dark-theme");
+  } else {
+    document.body.classList.remove("dark-theme");
+  }
+  
+  updateThemeIcons(isDark);
+  
+  toggleBtn.addEventListener("click", () => {
+    const activeDark = document.body.classList.toggle("dark-theme");
+    localStorage.setItem("theme", activeDark ? "dark" : "light");
+    updateThemeIcons(activeDark);
   });
+}
+
+function updateThemeIcons(isDark) {
+  const moonSvg = document.querySelector("#btn-theme-toggle .svg-moon");
+  const sunSvg = document.querySelector("#btn-theme-toggle .svg-sun");
+  if (!moonSvg || !sunSvg) return;
+  
+  if (isDark) {
+    moonSvg.style.display = "none";
+    sunSvg.style.display = "block";
+  } else {
+    moonSvg.style.display = "block";
+    sunSvg.style.display = "none";
+  }
 }
 
 // ==========================================================================
 // EXPORT AND SCREENSHOT FUNCTIONS
 // ==========================================================================
 
-/**
- * Menampilkan Toast Notification kustom
- */
 function showToast(message) {
   const toast = document.getElementById("toast-notification");
   toast.textContent = message;
@@ -471,58 +552,55 @@ async function copyCardToClipboard(cardId, button) {
   const card = document.getElementById(cardId);
   if (!card) return;
   
-  // Ganti icon ke spinner loading sementara
   const originalHTML = button.innerHTML;
   button.innerHTML = `
     <svg class="svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation: spin 1s linear infinite;">
-      <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.2)"></circle>
+      <circle cx="12" cy="12" r="10" stroke="rgba(0,0,0,0.1)"></circle>
       <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path>
     </svg>
   `;
   button.disabled = true;
   
   try {
-    // Clone elemen untuk merender gambar terpisah di luar screen
     const clone = card.cloneNode(true);
     clone.querySelectorAll('.export-hide').forEach(el => el.remove());
     
-    // Bungkus dalam container bertema solid agar hasil rendering kontras & bersih
     const wrapper = document.createElement('div');
     wrapper.className = 'export-mode';
+    // Warisi mode tema saat ini agar warna screenshot sesuai dengan tema yang aktif
+    if (document.body.classList.contains("dark-theme")) {
+      wrapper.className += ' dark-theme';
+    }
+    
     wrapper.style.position = 'fixed';
     wrapper.style.left = '-9999px';
     wrapper.style.top = '0';
-    wrapper.style.width = '380px'; // Lebar proporsional ideal share WA
+    wrapper.style.width = '380px';
     wrapper.appendChild(clone);
     document.body.appendChild(wrapper);
     
-    // Capture canvas resolusi tinggi
+    const isDarkActive = document.body.classList.contains("dark-theme");
     const canvas = await html2canvas(wrapper, {
       scale: 2.5,
-      backgroundColor: '#171e30',
+      backgroundColor: isDarkActive ? '#171e30' : '#ffffff',
       useCORS: true
     });
     
-    // Hapus wrapper sementara
     document.body.removeChild(wrapper);
     
-    // Tulis ke clipboard via blob
     canvas.toBlob(async blob => {
-      if (!blob) {
-        throw new Error("Gagal membuat data gambar");
-      }
+      if (!blob) throw new Error("Gagal membuat data gambar");
       try {
         await navigator.clipboard.write([
           new ClipboardItem({ "image/png": blob })
         ]);
         showToast("Gambar card disalin ke clipboard!");
       } catch (clipErr) {
-        console.warn("Clipboard API tidak didukung browser atau diblokir. Mengunduh gambar langsung...", clipErr);
-        // Fallback: Download file langsung
+        console.warn("Clipboard API blocked. Downloading image...", clipErr);
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `ronda-group-${cardId.replace('group-card-', '')}.png`;
+        a.download = `ronda-group-${cardId.replace('group-card-', '').replace('terdekat-card-', 'terdekat-')}.png`;
         a.click();
         URL.revokeObjectURL(url);
         showToast("Gambar diunduh otomatis.");
@@ -550,12 +628,16 @@ async function downloadScreenshot(type) {
   
   try {
     const putaranNo = globalConfig ? globalConfig.putaranAktif : 3;
+    const isDarkActive = document.body.classList.contains("dark-theme");
     let filename = "";
     let width = "1200px";
     
     // Buat container ekspor sementara
     const exportWrapper = document.createElement("div");
     exportWrapper.className = "export-mode";
+    if (isDarkActive) {
+      exportWrapper.className += ' dark-theme';
+    }
     exportWrapper.style.position = "fixed";
     exportWrapper.style.left = "-9999px";
     exportWrapper.style.top = "0";
@@ -565,11 +647,11 @@ async function downloadScreenshot(type) {
     headerClone.querySelectorAll(".btn-action-circle").forEach(el => el.remove());
     exportWrapper.appendChild(headerClone);
     
-    // Sub-title keterangan ekspor
+    // Sub-title
     const subTitle = document.createElement("h2");
     subTitle.style.textAlign = "center";
     subTitle.style.margin = "1.5rem 0";
-    subTitle.style.color = "#ffffff";
+    subTitle.style.color = "var(--text-main)";
     subTitle.style.fontSize = "1.25rem";
     subTitle.style.textTransform = "uppercase";
     
@@ -580,10 +662,8 @@ async function downloadScreenshot(type) {
       filename = `ronda-putaran${putaranNo}-${cleanMonthName}.png`;
       width = "900px";
       subTitle.textContent = `JADWAL RONDA - ${activeMonth}`;
-      
       gridLayout.className = "export-bulan-layout";
       
-      // Salin card yang tampil di bulan ini
       const activeCards = document.querySelectorAll("#jadwal-grid .card");
       if (activeCards.length === 0) {
         throw new Error("Tidak ada data jadwal untuk diekspor!");
@@ -597,15 +677,13 @@ async function downloadScreenshot(type) {
       filename = `ronda-putaran${putaranNo}-lengkap.png`;
       width = "1400px";
       subTitle.textContent = `JADWAL RONDA LENGKAP - PUTARAN ${putaranNo}`;
-      
       gridLayout.className = "export-putaran-layout";
       
-      // Render semua card untuk seluruh putaran
       if (allGroups.length === 0) {
         throw new Error("Tidak ada data jadwal lengkap untuk diekspor!");
       }
       allGroups.forEach(group => {
-        const cardHTML = createCardHTML(group, true); // true = sembunyikan tombol aksi
+        const cardHTML = createCardHTML(group, true);
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = cardHTML;
         gridLayout.appendChild(tempDiv.firstElementChild);
@@ -618,18 +696,16 @@ async function downloadScreenshot(type) {
     
     document.body.appendChild(exportWrapper);
     
-    // Berikan jeda sejenak untuk mematangkan render DOM
     await new Promise(resolve => setTimeout(resolve, 400));
     
     const canvas = await html2canvas(exportWrapper, {
-      scale: 2, // Resolusi 2x lipat lebih tajam
-      backgroundColor: "#0b0f19",
+      scale: 2,
+      backgroundColor: isDarkActive ? "#0b0f19" : "#f8fafc",
       useCORS: true
     });
     
     document.body.removeChild(exportWrapper);
     
-    // Trigger download PNG
     const imageURI = canvas.toDataURL("image/png");
     const a = document.createElement("a");
     a.href = imageURI;
@@ -660,24 +736,23 @@ async function loadData() {
   errorContainer.style.display = "none";
   appContainer.style.display = "none";
   
-  // Periksa apakah API_URL adalah mockup/placeholder
   const isMockMode = (API_URL === "YOUR_GAS_API_URL_HERE" || API_URL.trim() === "");
   
   try {
     if (isMockMode) {
       console.warn("Berjalan dalam DEMO MODE menggunakan data mockup.");
-      
-      // Ambil data mock
       globalConfig = MOCK_CONFIG;
       allGroups = processRawJadwal(MOCK_JADWAL.data);
       
-      // Tambahkan banner kecil info Demo
-      const demoIndicator = document.createElement("div");
-      demoIndicator.style.cssText = "background-color: var(--warning); color: #000; text-align: center; font-size: 0.75rem; font-weight: 700; padding: 0.25rem; position: sticky; top: 0; z-index: 9999;";
-      demoIndicator.textContent = "Running in Demo Mode (Local Mockup Data). Configure API_URL in app.js for Live Integration.";
-      document.body.insertBefore(demoIndicator, document.body.firstChild);
+      // Tambahkan banner kecil info Demo jika belum ada
+      if (!document.getElementById("demo-banner")) {
+        const demoIndicator = document.createElement("div");
+        demoIndicator.id = "demo-banner";
+        demoIndicator.style.cssText = "background-color: var(--warning); color: #000; text-align: center; font-size: 0.75rem; font-weight: 700; padding: 0.25rem; position: sticky; top: 0; z-index: 9999;";
+        demoIndicator.textContent = "Running in Demo Mode (Local Mockup Data). Configure API_URL in app.js for Live Integration.";
+        document.body.insertBefore(demoIndicator, document.body.firstChild);
+      }
     } else {
-      // Ambil Konfigurasi dari GAS API
       const configRes = await fetch(`${API_URL}?action=getKonfigurasi`);
       if (!configRes.ok) throw new Error("Gagal mengambil konfigurasi dari API");
       globalConfig = await configRes.json();
@@ -686,7 +761,6 @@ async function loadData() {
         throw new Error(globalConfig.message || "Server mengembalikan status error saat mengambil konfigurasi");
       }
       
-      // Ambil Jadwal dari GAS API
       const jadwalRes = await fetch(`${API_URL}?action=getJadwal`);
       if (!jadwalRes.ok) throw new Error("Gagal mengambil data jadwal dari API");
       const rawJadwal = await jadwalRes.json();
@@ -725,19 +799,18 @@ async function loadData() {
 // ==========================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Hubungkan tombol coba lagi error
+  // Inisialisasi tema
+  initTheme();
+  
   document.getElementById("btn-retry").addEventListener("click", loadData);
   
-  // Hubungkan tombol ekspor bulan
   document.getElementById("btn-export-bulan").addEventListener("click", () => {
     downloadScreenshot("bulan");
   });
   
-  // Hubungkan tombol ekspor satu putaran
   document.getElementById("btn-export-putaran").addEventListener("click", () => {
     downloadScreenshot("putaran");
   });
   
-  // Mulai memuat data
   loadData();
 });
