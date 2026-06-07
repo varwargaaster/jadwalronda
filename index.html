@@ -11,7 +11,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
@@ -41,40 +41,65 @@
     
     <!-- Main Header -->
     <header class="main-header" id="export-header-section">
-      <div class="logo-wrapper">
-        <img id="logo-perumahan" src="" alt="Logo Perumahan" class="logo-img" style="display: none;">
-        <img id="logo-paguyuban" src="" alt="Logo Paguyuban" class="logo-img" style="display: none;">
+      <div class="header-top-row">
+        <div class="header-left-info">
+          <div class="logo-wrapper">
+            <img id="logo-perumahan" src="" alt="Logo Perumahan" class="logo-img" style="display: none;">
+            <img id="logo-paguyuban" src="" alt="Logo Paguyuban" class="logo-img" style="display: none;">
+          </div>
+          <h1 id="main-title">Jadwal Ronda Warga Villa Aster Residence</h1>
+          <p class="header-subtitle">Halaman portal transparansi jadwal ronda malam dan kontribusi warga Villa Aster Residence.</p>
+        </div>
+        
+        <!-- Header Actions Container (Salin, Refresh, Theme, Download) -->
+        <div class="header-right-actions export-hide">
+          <button id="btn-theme-toggle" class="btn-action-circle" title="Ubah Tema (Terang/Gelap)">
+            <!-- Moon Icon SVG -->
+            <svg viewBox="0 0 24 24" class="svg-icon svg-moon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <!-- Sun Icon SVG -->
+            <svg viewBox="0 0 24 24" class="svg-icon svg-sun" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+          
+          <button id="btn-copy-jadwal-main" class="btn-header-rect" title="Salin Screenshot Bulan Ini ke Clipboard">
+            <svg viewBox="0 0 24 24" class="svg-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>Salin Gambar Jadwal</span>
+          </button>
+
+          <button id="btn-refresh-data" class="btn-header-rect" title="Muat Ulang Data dari Google Sheet">
+            <svg viewBox="0 0 24 24" class="svg-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+            <span>Refresh Data</span>
+          </button>
+
+          <button id="btn-export-putaran" class="btn-action-circle" title="Download Screenshot Satu Putaran">
+            <!-- Camera Icon SVG -->
+            <svg viewBox="0 0 24 24" class="svg-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+          </button>
+        </div>
       </div>
-      <h1 id="main-title">Jadwal Ronda Warga Villa Aster Residence</h1>
       
-      <!-- Putaran Badge, Theme Toggle & Screenshot Putaran -->
-      <div class="putaran-badge-wrapper">
+      <!-- Putaran Badge -->
+      <div class="putaran-badge-wrapper" style="margin-top: 1rem;">
         <span class="putaran-badge" id="putaran-label">PUTARAN -</span>
-        <button id="btn-theme-toggle" class="btn-action-circle" title="Ubah Tema (Terang/Gelap)">
-          <!-- Moon Icon SVG -->
-          <svg viewBox="0 0 24 24" class="svg-icon svg-moon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-          <!-- Sun Icon SVG -->
-          <svg viewBox="0 0 24 24" class="svg-icon svg-sun" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-        </button>
-        <button id="btn-export-putaran" class="btn-action-circle" title="Download Screenshot Satu Putaran">
-          <!-- Camera Icon SVG -->
-          <svg viewBox="0 0 24 24" class="svg-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-            <circle cx="12" cy="13" r="4"></circle>
-          </svg>
-        </button>
       </div>
     </header>
 
@@ -89,12 +114,17 @@
       </div>
     </section>
 
+    <!-- Stats Banner Section (MATCHING THE ATTACHED DESIGN) -->
+    <section id="stats-banner" class="stats-banner-container" style="display: none;">
+      <!-- Populated dynamically via JavaScript -->
+    </section>
+
     <!-- Filter Bulan Navigasi -->
     <section id="filter-section" class="filter-section">
       <div class="filter-header">
         <div class="filter-label-wrapper">
           <span class="section-emoji">📅</span>
-          <h2 class="section-title">Jadwal Bulanan</h2>
+          <h2 class="section-title">Jadwal Putaran Aktif</h2>
         </div>
         <button id="btn-export-bulan" class="btn-action-circle" title="Download Screenshot Bulan Ini" style="display: none;">
           <!-- Camera Icon SVG -->
@@ -113,7 +143,7 @@
 
     <!-- Main Grid Card Jadwal Mingguan -->
     <main class="main-content">
-      <div id="jadwal-grid" class="jadwal-grid">
+      <div id="jadwal-grid" class="jadwal-grid-container">
         <!-- Rendered dynamically via JavaScript -->
       </div>
     </main>
