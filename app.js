@@ -317,7 +317,7 @@ function createCardHTML(group, isExportMode = false) {
         
         <div class="card-header-right-actions">
           ${!isExportMode ? `
-            <div class="card-actions-wrapper export-hide" style="display: inline-flex; gap: 0.15rem;">
+            <div class="card-actions-wrapper export-exclude" style="display: inline-flex; gap: 0.15rem;">
               <button class="btn-copy-card-inline" onclick="copyCardToClipboard('${cardId}', this)" title="Salin Card Gambar">
                 <svg viewBox="0 0 24 24" class="svg-icon-inline" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -405,7 +405,7 @@ function createRondaTerdekatHTML(group, isExportMode = false) {
       <span class="ronda-terdekat-badge">🟢 RONDA TERDEKAT</span>
       <div class="ronda-terdekat-header-right">
         ${!isExportMode ? `
-          <div class="card-actions-wrapper export-hide" style="display: inline-flex; gap: 0.25rem; margin-right: 0.75rem; vertical-align: middle;">
+          <div class="card-actions-wrapper export-exclude" style="display: inline-flex; gap: 0.25rem; margin-right: 0.75rem; vertical-align: middle;">
             <button class="btn-copy-card-inline" style="color: #ffffff; background-color: rgba(255, 255, 255, 0.1);" onclick="copyCardToClipboard('${cardId}', this)" title="Salin Card Gambar">
               <svg viewBox="0 0 24 24" class="svg-icon-inline" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -448,7 +448,7 @@ function createRondaTerdekatHTML(group, isExportMode = false) {
         <span>🕐 ⏳ ${countdown.text}</span>
       </div>
       ${!isExportMode ? `
-        <button id="btn-toggle-members-accordeon" class="btn-ronda-terdekat-accordeon export-hide" onclick="toggleRondaTerdekatMembers()">
+        <button id="btn-toggle-members-accordeon" class="btn-ronda-terdekat-accordeon export-exclude" onclick="toggleRondaTerdekatMembers()">
           <span>Sembunyikan Anggota</span> <span>↑</span>
         </button>
       ` : ''}
@@ -675,7 +675,7 @@ async function copyCardToClipboard(cardId, button) {
   
   try {
     const clone = card.cloneNode(true);
-    clone.querySelectorAll('.export-hide').forEach(el => el.remove());
+    clone.querySelectorAll('.export-exclude').forEach(el => el.remove());
     
     // Pastikan accordeon anggota Ronda Terdekat terekspos penuh di screenshot gambar
     const isTerdekat = cardId.startsWith('terdekat-card');
@@ -753,7 +753,7 @@ async function downloadCardScreenshot(cardId, button, groupNumber) {
   
   try {
     const clone = card.cloneNode(true);
-    clone.querySelectorAll('.export-hide').forEach(el => el.remove());
+    clone.querySelectorAll('.export-exclude').forEach(el => el.remove());
     
     const isTerdekat = cardId.startsWith('terdekat-card');
     if (isTerdekat) {
@@ -847,7 +847,7 @@ async function copyJadwalMainToClipboard(button) {
     }
     activeCards.forEach(card => {
       const cardClone = card.cloneNode(true);
-      cardClone.querySelectorAll(".export-hide").forEach(el => el.remove());
+      cardClone.querySelectorAll(".export-exclude").forEach(el => el.remove());
       gridLayout.appendChild(cardClone);
     });
     
@@ -946,7 +946,7 @@ async function downloadScreenshot(type) {
       }
       activeCards.forEach(card => {
         const cardClone = card.cloneNode(true);
-        cardClone.querySelectorAll(".export-hide").forEach(el => el.remove());
+        cardClone.querySelectorAll(".export-exclude").forEach(el => el.remove());
         gridLayout.appendChild(cardClone);
       });
     } else {
