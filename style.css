@@ -1061,7 +1061,7 @@ body {
 /* ==========================================================================
    HTML2CANVAS EXPORT SPECIFIC ADJUSTMENTS
    ========================================================================== */
-.export-hide {
+.export-mode .export-hide {
   display: none !important;
 }
 
