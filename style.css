@@ -334,7 +334,7 @@ body {
 .putaran-badge-wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.5rem;
 }
 
@@ -467,14 +467,19 @@ body {
 }
 
 .ronda-terdekat-card {
-  background: linear-gradient(135deg, #065f46 0%, #047857 100%) !important;
-  border: none !important;
-  color: #ffffff !important;
+  background-color: var(--bg-surface) !important;
+  border: 3px solid #059669 !important;
+  color: var(--text-main) !important;
   border-radius: 16px;
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-lg);
+  transition: all 0.2s ease;
+}
+
+.dark-theme .ronda-terdekat-card {
+  border-color: #10b981 !important;
 }
 
 .ronda-terdekat-top-bar {
@@ -485,10 +490,9 @@ body {
 }
 
 .ronda-terdekat-badge {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  padding: 0.25rem 0.75rem;
+  background-color: #059669 !important;
+  color: #ffffff !important;
+  padding: 0.35rem 0.85rem;
   border-radius: 99px;
   font-weight: 800;
   font-size: 0.75rem;
@@ -496,6 +500,12 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  border: none !important;
+}
+
+.dark-theme .ronda-terdekat-badge {
+  background-color: #10b981 !important;
+  color: #0b0f19 !important;
 }
 
 .ronda-terdekat-header-right {
@@ -507,7 +517,7 @@ body {
   font-weight: 800;
   font-size: 0.85rem;
   letter-spacing: 0.05em;
-  color: #ffffff;
+  color: var(--text-muted) !important;
   text-transform: uppercase;
 }
 
@@ -518,7 +528,7 @@ body {
 .ronda-terdekat-group-title {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-main) !important;
 }
 
 .ronda-terdekat-grid {
@@ -526,10 +536,10 @@ body {
   grid-template-columns: 1fr;
   gap: 0.75rem;
   margin-bottom: 1.25rem;
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: var(--bg-main) !important;
   padding: 1rem;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-light) !important;
 }
 
 @media (min-width: 640px) {
@@ -543,15 +553,16 @@ body {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.9rem;
-  color: #ffffff;
+  color: var(--text-main) !important;
 }
 
 .ronda-terdekat-meta-item strong {
   font-weight: 700;
+  color: var(--text-main) !important;
 }
 
 .ronda-terdekat-meta-item.link-maps {
-  color: #a7f3d0;
+  color: var(--primary) !important;
   text-decoration: none;
   cursor: pointer;
 }
@@ -571,16 +582,16 @@ body {
 .ronda-terdekat-countdown {
   font-size: 0.95rem;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-main) !important;
   display: flex;
   align-items: center;
   gap: 0.45rem;
 }
 
 .btn-ronda-terdekat-accordeon {
-  background-color: #ffffff;
-  color: #065f46;
-  border: none;
+  background-color: var(--bg-main) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--border-light) !important;
   font-weight: 800;
   font-size: 0.85rem;
   padding: 0.5rem 1.25rem;
@@ -595,54 +606,14 @@ body {
 }
 
 .btn-ronda-terdekat-accordeon:hover {
-  background-color: #f1f5f9;
+  background-color: var(--border-light) !important;
   transform: translateY(-1px);
 }
 
 .ronda-terdekat-accordeon {
   margin-top: 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid var(--border-light) !important;
   padding-top: 1.25rem;
-}
-
-/* Ronda Terdekat Card Content styling overrides (both standard and export mode) */
-.ronda-terdekat-card,
-.ronda-terdekat-card .member-nama-text,
-.ronda-terdekat-card .ronda-terdekat-meta-item,
-.ronda-terdekat-card .ronda-terdekat-countdown,
-.ronda-terdekat-card .ronda-terdekat-countdown span {
-  color: #ffffff !important;
-}
-
-.ronda-terdekat-card .member-row-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.ronda-terdekat-card .member-row-item:last-child {
-  border-bottom: none !important;
-}
-
-.ronda-terdekat-card .member-blok-tag {
-  background-color: rgba(255, 255, 255, 0.15) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: #ffffff !important;
-}
-
-.ronda-terdekat-card .member-badge-item.danru {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-}
-
-.ronda-terdekat-card .member-badge-item.wilayah {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  color: rgba(255, 255, 255, 0.8) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-}
-
-.ronda-terdekat-card .btn-copy-card-inline:hover {
-  color: #ffffff !important;
-  background-color: rgba(255, 255, 255, 0.25) !important;
 }
 
 .card-header-right-actions {
@@ -1095,14 +1066,19 @@ body {
 }
 
 .export-mode .ronda-terdekat-card {
-  background: linear-gradient(135deg, #065f46 0%, #047857 100%) !important;
-  border: none !important;
-  color: #ffffff !important;
+  background-color: var(--bg-card-solid) !important;
+  background: var(--bg-card-solid) !important;
+  border: 3px solid #059669 !important;
+  color: var(--text-main) !important;
+}
+
+.dark-theme.export-mode .ronda-terdekat-card {
+  border-color: #10b981 !important;
 }
 
 .export-mode .ronda-terdekat-grid {
-  background-color: rgba(0, 0, 0, 0.15) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background-color: var(--bg-main) !important;
+  border: 1px solid var(--border-medium) !important;
 }
 
 /* Layout satu putaran saat di-export agar card berjejer rapi di gambar */
