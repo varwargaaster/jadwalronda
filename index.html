@@ -1,8 +1,121 @@
-<html>
-  <head>
-    <title>Jadwal Ronda Warga</title>
-  </head>
-  <body>
-    Tes
-  </body>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadwal Ronda Warga Villa Aster Residence</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Sistem jadwal ronda warga Villa Aster Residence. Dapatkan informasi jadwal ronda terdekat, daftar kelompok ronda bulanan, serta bagikan jadwal ke WhatsApp.">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Loading State Overlay -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="spinner-container">
+      <div class="premium-spinner"></div>
+      <p class="loading-text">Memuat jadwal ronda warga...</p>
+    </div>
+  </div>
+
+  <!-- Error State Container -->
+  <div id="error-container" class="error-container" style="display: none;">
+    <div class="error-card">
+      <span class="error-icon">⚠️</span>
+      <h2>Gagal Memuat Jadwal</h2>
+      <p id="error-message">Terjadi kesalahan saat mengambil data dari server. Pastikan koneksi internet Anda aktif dan coba lagi.</p>
+      <button id="btn-retry" class="btn-retry">Coba Lagi</button>
+    </div>
+  </div>
+
+  <!-- App Wrapper (hidden until loaded) -->
+  <div id="app-container" class="app-container" style="display: none;">
+    
+    <!-- Main Header -->
+    <header class="main-header" id="export-header-section">
+      <div class="logo-wrapper">
+        <img id="logo-perumahan" src="" alt="Logo Perumahan" class="logo-img" style="display: none;">
+        <img id="logo-paguyuban" src="" alt="Logo Paguyuban" class="logo-img" style="display: none;">
+      </div>
+      <h1 id="main-title">Jadwal Ronda Warga Villa Aster Residence</h1>
+      
+      <!-- Putaran Badge & Screenshot Putaran -->
+      <div class="putaran-badge-wrapper">
+        <span class="putaran-badge" id="putaran-label">PUTARAN -</span>
+        <button id="btn-export-putaran" class="btn-action-circle" title="Download Screenshot Satu Putaran">
+          <!-- Camera Icon SVG -->
+          <svg viewBox="0 0 24 24" class="svg-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Card Ronda Terdekat (Paling Atas) -->
+    <section id="ronda-terdekat-section" class="ronda-terdekat-section">
+      <div class="section-title-wrapper">
+        <span class="section-emoji">🔔</span>
+        <h2 class="section-title">Ronda Terdekat</h2>
+      </div>
+      <div id="ronda-terdekat-card-container">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Filter Bulan Navigasi -->
+    <section id="filter-section" class="filter-section">
+      <div class="filter-header">
+        <div class="filter-label-wrapper">
+          <span class="section-emoji">📅</span>
+          <h2 class="section-title">Jadwal Bulanan</h2>
+        </div>
+        <button id="btn-export-bulan" class="btn-action-circle" title="Download Screenshot Bulan Ini" style="display: none;">
+          <!-- Camera Icon SVG -->
+          <svg viewBox="0 0 24 24" class="svg-icon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Tab Navigation (Horizontal Scroll) -->
+      <nav id="filter-bulan" class="filter-bulan-tabs">
+        <!-- Rendered dynamically via JavaScript -->
+      </nav>
+    </section>
+
+    <!-- Main Grid Card Jadwal Mingguan -->
+    <main class="main-content">
+      <div id="jadwal-grid" class="jadwal-grid">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <p id="footer-text">© 2026 Villa Aster Residence. All rights reserved.</p>
+    </footer>
+    
+  </div>
+
+  <!-- Toast Notification Alert -->
+  <div id="toast-notification" class="toast-notification">
+    Gambar berhasil disalin ke clipboard!
+  </div>
+
+  <!-- Library html2canvas -->
+  <script src="lib/html2canvas.min.js"></script>
+  <!-- Main Application Logic -->
+  <script src="app.js"></script>
+</body>
 </html>
