@@ -472,7 +472,7 @@ function createRondaTerdekatHTML(group, isExportMode = false) {
     </div>
     
     <div id="ronda-terdekat-accordeon" class="ronda-terdekat-accordeon" style="display: block;">
-      <div class="member-list-header" style="color: rgba(255,255,255,0.75);">Daftar Anggota (${group.members.length} Orang)</div>
+      <div class="member-list-header" style="color: rgba(0,0,0,0.75);">Daftar Anggota (${group.members.length} Orang)</div>
       <div class="member-list">
         ${memberRowsHTML}
       </div>
