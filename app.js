@@ -1,3 +1,4 @@
+
 /**
  * Client-side Application Logic for Villa Aster Residence Ronda System
  */
@@ -1036,17 +1037,45 @@ async function loadData() {
         document.body.insertBefore(demoIndicator, document.body.firstChild);
       }
     } else {
-      const configRes = await fetch(`${API_URL}?action=getKonfigurasi`);
-      if (!configRes.ok) throw new Error("Gagal mengambil konfigurasi dari API");
-      globalConfig = await configRes.json();
+      const configUrl = `${API_URL}${API_URL.includes('?') ? '&' : '?'}action=getKonfigurasi`;
+      console.log("[CONFIG] REQUEST URL:", configUrl);
+
+      const configRes = await fetch(configUrl);
+
+      console.log("[CONFIG] HTTP STATUS:", configRes.status);
+      console.log("[CONFIG] RESPONSE URL:", configRes.url);
+      console.log("[CONFIG] REDIRECTED:", configRes.redirected);
+
+      if (!configRes.ok) {
+        const rawErrText = await configRes.text();
+        console.log("[CONFIG] RAW ERROR RESPONSE:", rawErrText);
+        throw new Error("Gagal mengambil konfigurasi dari API (HTTP " + configRes.status + ")");
+      }
+
+      const rawConfigText = await configRes.text();
+      console.log("[CONFIG] RAW RESPONSE:", rawConfigText);
+      globalConfig = JSON.parse(rawConfigText);
       
       if (globalConfig.status === "error") {
         throw new Error(globalConfig.message || "Server mengembalikan status error saat mengambil konfigurasi");
       }
       
-      const jadwalRes = await fetch(`${API_URL}?action=getJadwal`);
-      if (!jadwalRes.ok) throw new Error("Gagal mengambil data jadwal dari API");
-      const rawJadwal = await jadwalRes.json();
+      const jadwalUrl = `${API_URL}${API_URL.includes('?') ? '&' : '?'}action=getJadwal`;
+      console.log("[JADWAL] REQUEST URL:", jadwalUrl);
+      const jadwalRes = await fetch(jadwalUrl);
+      
+      console.log("[JADWAL] HTTP STATUS:", jadwalRes.status);
+      console.log("[JADWAL] RESPONSE URL:", jadwalRes.url);
+      console.log("[JADWAL] REDIRECTED:", jadwalRes.redirected);
+
+      if (!jadwalRes.ok) {
+        const rawJadwalErr = await jadwalRes.text();
+        console.log("[JADWAL] RAW ERROR RESPONSE:", rawJadwalErr);
+        throw new Error("Gagal mengambil data jadwal dari API (HTTP " + jadwalRes.status + ")");
+      }
+
+      const rawJadwalText = await jadwalRes.text();
+      const rawJadwal = JSON.parse(rawJadwalText);
       
       if (rawJadwal.status === "error") {
         throw new Error(rawJadwal.message || "Server mengembalikan status error saat mengambil jadwal");
