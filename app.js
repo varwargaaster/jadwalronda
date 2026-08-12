@@ -7,9 +7,7 @@
 // ==========================================================================
 // PENTING: Ganti string di bawah ini dengan URL Web App Google Apps Script Anda setelah dideploy.
 // Contoh: "https://script.google.com/macros/s/AKfycbz1-Z_XxxYYY.../exec"
-const API_URL = "https://script.google.com/macros/s/AKfycbyHzOfCv1uAUm4fhHWIG_vT74UTYR7cA6XFoYAkTkOcg_4gaY0eKmn7aOKw-1eYa4zQ/exec";
-
-
+const API_URL = "YOUR_GAS_API_URL_HERE";
 
 // Data Mockup untuk uji coba lokal & demonstrasi jika API_URL belum dikonfigurasi
 const MOCK_CONFIG = {
@@ -29,32 +27,29 @@ const MOCK_JADWAL = {
   data: [
     // GROUP 1 - HUTANG (Mei)
     { putaran: 2, group: 1, namaGroup: "Al Ghaffaar", jenis: "Hutang", tanggal: "02/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-02", nama: "Agus", danru: "Ya", tanggalTidakRonda: "24/02/2026", alasanTidakHadir: "Sakit Demam" },
-    { putaran: 2, group: 1, namaGroup: "Al Ghaffaar", jenis: "Hutang", tanggal: "02/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-12", nama: "Budi", danru: "Tidak", tanggalTidakRonda: "24/02/2026", alasanTidakHadir: "Dinas Luar Kota" },
-    { putaran: 2, group: 1, namaGroup: "Al Ghaffaar", jenis: "Hutang", tanggal: "02/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-02", nama: "Dedi", danru: "Tidak", tanggalTidakRonda: "24/02/2026", alasanTidakHadir: "Izin Keluarga" },
+    { putaran: 2, group: 1, namaGroup: "Al Ghaffaar", jenis: "Hutang", tanggal: "02/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-05", nama: "Budi", danru: "Tidak", tanggalTidakRonda: "24/02/2026", alasanTidakHadir: "Dinas Luar Kota" },
+    { putaran: 2, group: 1, namaGroup: "Al Ghaffaar", jenis: "Hutang", tanggal: "02/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "B-03", nama: "Dedi", danru: "Tidak", tanggalTidakRonda: "24/02/2026", alasanTidakHadir: "Izin Keluarga" },
 
     // GROUP 2 - HUTANG (Mei)
-    { putaran: 2, group: 2, namaGroup: "Al Qahhaar", jenis: "Hutang", tanggal: "09/05/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-05", nama: "Hendra", danru: "Ya", tanggalTidakRonda: "10/02/2026", alasanTidakHadir: "Tugas Shift Malam" },
-    { putaran: 2, group: 2, namaGroup: "Al Qahhaar", jenis: "Hutang", tanggal: "09/05/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-04", nama: "Samsul", danru: "Tidak", tanggalTidakRonda: "10/02/2026", alasanTidakHadir: "Sakit Flu" },
+    { putaran: 2, group: 2, namaGroup: "Al Qahhaar", jenis: "Hutang", tanggal: "09/05/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-05", nama: "Hendra", danru: "Ya", tanggalTidakRonda: "10/02/2026", alasanTidakHadir: "Tugas Shift Malam" },
+    { putaran: 2, group: 2, namaGroup: "Al Qahhaar", jenis: "Hutang", tanggal: "09/05/2026", titikKumpul: "Pos Barat", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-12", nama: "Samsul", danru: "Tidak", tanggalTidakRonda: "10/02/2026", alasanTidakHadir: "Sakit Flu" },
 
-    // GROUP 3 - REGULER (Mei)
-    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-12", nama: "Pak Rachman", danru: "Ya" },
-    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "G-07", nama: "Goklas Toni", danru: "Tidak" },
-    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Al-Kautsar", blok: "K-02", nama: "Bobby", danru: "Tidak" },
-    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Tebing Keraton", blok: "T-01", nama: "Yusuf", danru: "Tidak" },
-    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-08", nama: "Joko", danru: "Tidak" },
-    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-10", nama: "Anto", danru: "Tidak" },
-    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-09", nama: "Danang", danru: "Tidak" },
-    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-15", nama: "Taufik", danru: "Tidak" },
+    // GROUP 3 - REGULER (Mei - Wilayah: Lurah)
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-02", nama: "Pak Agus", danru: "Ya" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-05", nama: "Pak Budi", danru: "Tidak" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-08", nama: "Pak Joko", danru: "Tidak" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-10", nama: "Pak Yudi", danru: "Tidak" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "B-03", nama: "Pak Dedi", danru: "Tidak" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "B-07", nama: "Pak Hendri", danru: "Tidak" },
+    { putaran: 2, group: 3, namaGroup: "Al 'Aliim", jenis: "Reguler", tanggal: "16/05/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "C-01", nama: "Pak Anto", danru: "Tidak" },
 
-    // GROUP 7 - REGULER (Juni - Ronda Terdekat di Mockup)
-    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-05", nama: "Bp joko", danru: "Ya" },
-    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-11", nama: "Anton", danru: "Tidak" },
-    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Al-Kautsar", blok: "K-04", nama: "Farhan", danru: "Tidak" },
-    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Tebing Keraton", blok: "T-03", nama: "Satria", danru: "Tidak" },
-    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-17", nama: "Rian", danru: "Tidak" },
-    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Sabambu", blok: "N-12", nama: "Fajar", danru: "Tidak" },
-    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "CRT", blok: "C-08", nama: "Eko", danru: "Tidak" },
-    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "Lurah", blok: "A-10", nama: "Yudi", danru: "Tidak" }
+    // GROUP 7 - REGULER (Juni - Ronda Terdekat di Mockup - Wilayah: V-Power)
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-05", nama: "Pak Rachman", danru: "Ya" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-12", nama: "Pak Hendra", danru: "Tidak" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-15", nama: "Pak Taufik", danru: "Tidak" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "J-17", nama: "Pak Rian", danru: "Tidak" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "K-04", nama: "Pak Farhan", danru: "Tidak" },
+    { putaran: 2, group: 7, namaGroup: "Ar Raafi'", jenis: "Reguler", tanggal: "13/06/2026", titikKumpul: "Masjid Ar Ridho", linkMaps: "https://maps.google.com", wilayah: "V-Power", blok: "K-08", nama: "Pak Bambang", danru: "Tidak" }
   ]
 };
 
@@ -472,7 +467,7 @@ function createRondaTerdekatHTML(group, isExportMode = false) {
     </div>
     
     <div id="ronda-terdekat-accordeon" class="ronda-terdekat-accordeon" style="display: block;">
-      <div class="member-list-header" style="color: rgba(0,0,0,0.75);">Daftar Anggota (${group.members.length} Orang)</div>
+      <div class="member-list-header" style="color: rgba(255,255,255,0.75);">Daftar Anggota (${group.members.length} Orang)</div>
       <div class="member-list">
         ${memberRowsHTML}
       </div>
