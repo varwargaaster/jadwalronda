@@ -7,7 +7,7 @@
 // ==========================================================================
 // PENTING: Ganti string di bawah ini dengan URL Web App Google Apps Script Anda setelah dideploy.
 // Contoh: "https://script.google.com/macros/s/AKfycbz1-Z_XxxYYY.../exec"
-const API_URL = "YOUR_GAS_API_URL_HERE";
+const API_URL = "https://script.google.com/macros/s/AKfycbyHzOfCv1uAUm4fhHWIG_vT74UTYR7cA6XFoYAkTkOcg_4gaY0eKmn7aOKw-1eYa4zQ/exec";
 
 // Data Mockup untuk uji coba lokal & demonstrasi jika API_URL belum dikonfigurasi
 const MOCK_CONFIG = {
