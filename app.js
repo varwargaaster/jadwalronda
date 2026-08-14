@@ -1,4 +1,3 @@
-
 /**
  * Client-side Application Logic for Villa Aster Residence Ronda System
  */
@@ -8,6 +7,7 @@
 // ==========================================================================
 // PENTING: Ganti string di bawah ini dengan URL Web App Google Apps Script Anda setelah dideploy.
 // Contoh: "https://script.google.com/macros/s/AKfycbz1-Z_XxxYYY.../exec"
+
 const API_URL = "https://script.google.com/macros/s/AKfycbz9u7Ac0q4mV16VC68SDCX03mfylGpXZiU6jr7ASMzQc4HSOtcQcOSer3DS_08YXBpx/exec";
 
 // Data Mockup untuk uji coba lokal & demonstrasi jika API_URL belum dikonfigurasi
@@ -62,8 +62,29 @@ let activeMonth = "";
 let rondaTerdekatGroup = null;
 
 // ==========================================================================
-// DATE HELPERS
+// DATE HELPERS (Asia/Jakarta Normalized)
 // ==========================================================================
+
+function getJakartaToday() {
+  const now = new Date();
+  try {
+    const jakartaFormatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Jakarta',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const parts = jakartaFormatter.formatToParts(now);
+    const year = parseInt(parts.find(p => p.type === 'year').value, 10);
+    const month = parseInt(parts.find(p => p.type === 'month').value, 10) - 1;
+    const day = parseInt(parts.find(p => p.type === 'day').value, 10);
+    return new Date(year, month, day, 0, 0, 0, 0);
+  } catch (e) {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+}
 
 function parseDateString(dateStr) {
   if (!dateStr) return null;
@@ -148,7 +169,9 @@ function processRawJadwal(rawData) {
       danru: row.danru || "Tidak",
       wilayah: row.wilayah || "",
       tanggalTidakRonda: row.tanggalTidakRonda || "",
-      alasanTidakHadir: row.alasanTidakHadir || ""
+      alasanTidakHadir: row.alasanTidakHadir || "",
+      debtSequence: row.debtSequence,
+      debtSequenceLabel: row.debtSequenceLabel
     });
   });
   
@@ -175,9 +198,7 @@ function processRawJadwal(rawData) {
 function findRondaTerdekat(groups) {
   if (groups.length === 0) return null;
   
-  // Membandingkan hari ini (tanpa jam)
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = getJakartaToday();
   
   const upcomingGroups = groups.filter(g => {
     const gDate = parseDateString(g.tanggal);
@@ -195,8 +216,7 @@ function getCountdownStatus(dateStr) {
   const gDate = parseDateString(dateStr);
   if (!gDate) return { text: "", class: "past", html: "" };
   
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = getJakartaToday();
   
   const diffTime = gDate.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -1106,11 +1126,550 @@ async function loadData() {
 }
 
 // ==========================================================================
+// SEARCH FEATURE IMPLEMENTATION (Client-side Search & Resident Summary)
+// ==========================================================================
+
+function searchWarga(query) {
+  if (!query || !query.trim()) return [];
+  const q = query.trim().toLowerCase();
+  
+  const residentMap = {};
+  
+  allGroups.forEach(group => {
+    group.members.forEach(member => {
+      const matchName = (member.nama || "").toLowerCase().includes(q);
+      const matchBlok = (member.blok || "").toLowerCase().includes(q);
+      
+      if (matchName || matchBlok) {
+        const key = ((member.blok || "").trim() + "___" + (member.nama || "").trim()).toLowerCase();
+        if (!residentMap[key]) {
+          residentMap[key] = {
+            key: key,
+            nama: member.nama || "",
+            blok: member.blok || "",
+            wilayah: member.wilayah || "",
+            obligations: []
+          };
+        }
+        
+        residentMap[key].obligations.push({
+          putaran: group.putaran,
+          groupNumber: group.groupNumber,
+          namaGroup: group.namaGroup,
+          jenis: group.jenis || "Reguler",
+          tanggal: group.tanggal,
+          titikKumpul: group.titikKumpul,
+          linkMaps: group.linkMaps || "",
+          wilayah: member.wilayah || "",
+          danru: member.danru || "Tidak",
+          tanggalTidakRonda: member.tanggalTidakRonda || "",
+          alasanTidakHadir: member.alasanTidakHadir || "",
+          debtSequence: member.debtSequence,
+          debtSequenceLabel: member.debtSequenceLabel
+        });
+      }
+    });
+  });
+  
+  const residents = Object.values(residentMap);
+  
+  const today = getJakartaToday();
+  
+  residents.forEach(res => {
+    // Sort all obligations by date ASC
+    res.obligations.sort((a, b) => {
+      const dateA = parseDateString(a.tanggal);
+      const dateB = parseDateString(b.tanggal);
+      if (dateA && dateB && dateA.getTime() !== dateB.getTime()) {
+        return dateA.getTime() - dateB.getTime();
+      }
+      return a.groupNumber - b.groupNumber;
+    });
+    
+    // Assign debtSequenceLabel dynamically if missing
+    let debtCount = 0;
+    res.obligations.forEach(ob => {
+      if ((ob.jenis || "").toLowerCase() === "hutang") {
+        debtCount++;
+        if (!ob.debtSequenceLabel) {
+          ob.debtSequenceLabel = `Hutang Ronda ke-${debtCount}`;
+        }
+      }
+    });
+    
+    // 3. Find upcoming schedules (tanggal >= today)
+    const upcomingIndices = [];
+    res.obligations.forEach((ob, idx) => {
+      const d = parseDateString(ob.tanggal);
+      if (d && d.getTime() >= today.getTime()) {
+        upcomingIndices.push(idx);
+      }
+    });
+    
+    if (upcomingIndices.length > 0) {
+      // Pick the earliest upcoming date (closest future schedule)
+      const terdekatIdx = upcomingIndices[0];
+      res.jadwalTerdekat = res.obligations[terdekatIdx];
+      res.terdekatLabel = "🔔 JADWAL TERDEKAT";
+      res.isTerakhir = false;
+      res.jadwalLainnya = res.obligations.filter((_, idx) => idx !== terdekatIdx);
+    } else {
+      // All schedules in past -> label "JADWAL TERAKHIR", pick the most recent past date (last in ASC sort)
+      const terakhirIdx = res.obligations.length - 1;
+      res.jadwalTerdekat = res.obligations[terakhirIdx];
+      res.terdekatLabel = "✔ JADWAL TERAKHIR";
+      res.isTerakhir = true;
+      res.jadwalLainnya = res.obligations.filter((_, idx) => idx !== terakhirIdx);
+    }
+  });
+  
+  // Sort residents by natural house number, then name
+  residents.sort((a, b) => {
+    return a.blok.localeCompare(b.blok, undefined, { numeric: true }) || a.nama.localeCompare(b.nama);
+  });
+  
+  return residents;
+}
+
+function renderSearchResults(results, query) {
+  const container = document.getElementById("search-results-container");
+  const countBadge = document.getElementById("search-count-badge");
+  if (!container) return;
+  
+  if (results.length === 0) {
+    if (countBadge) countBadge.textContent = "0 Ditemukan";
+    container.innerHTML = `
+      <div class="search-empty-state">
+        <span class="search-empty-icon">🔍</span>
+        <h3 class="search-empty-title">Jadwal warga tidak ditemukan</h3>
+        <p class="search-empty-desc">Tidak ditemukan jadwal ronda untuk pencarian "<strong>${escapeHtml(query)}</strong>". Pastikan penulisan nama atau nomor blok sudah benar.</p>
+        <button class="btn-back-to-schedule" onclick="clearSearch()">✕ Kembali ke Jadwal Lengkap</button>
+      </div>
+    `;
+    return;
+  }
+  
+  if (countBadge) {
+    countBadge.textContent = `${results.length} Warga Ditemukan`;
+  }
+  
+  let html = "";
+  results.forEach(res => {
+    const totalObligations = res.obligations.length;
+    const countLabel = totalObligations === 1 ? "1 Jadwal Terdaftar" : `${totalObligations} Jadwal Terdaftar`;
+    
+    // Jadwal Terdekat / Terakhir
+    const jt = res.jadwalTerdekat;
+    const formattedJtDate = formatIndonesianDate(jt.tanggal);
+    const countdownJt = getCountdownStatus(jt.tanggal);
+    const isDanruJt = jt.danru === "Ya";
+    const danruBadgeJt = isDanruJt ? `<span class="member-badge-item danru" style="margin-left: 0.4rem;">🛡️ DANRU</span>` : "";
+    const typeBadgeClassJt = jt.jenis.toLowerCase() === "hutang" ? "hutang" : "reguler";
+    const typeLabelJt = jt.debtSequenceLabel || jt.jenis;
+    const mapLinkJt = jt.linkMaps ? `href="${jt.linkMaps}" target="_blank" rel="noopener"` : "";
+    const terdekatBadgeText = res.terdekatLabel || "🔔 JADWAL TERDEKAT";
+    
+    // Jadwal Lainnya
+    let lainnyaHTML = "";
+    if (res.jadwalLainnya.length > 0) {
+      let itemsHTML = "";
+      res.jadwalLainnya.forEach(ob => {
+        const fDate = formatIndonesianDate(ob.tanggal);
+        const typeBadgeCls = ob.jenis.toLowerCase() === "hutang" ? "hutang" : "reguler";
+        const typeLbl = ob.debtSequenceLabel || ob.jenis;
+        const isDanru = ob.danru === "Ya";
+        const dBadge = isDanru ? `<span class="member-badge-item danru">DANRU</span>` : "";
+        const mLink = ob.linkMaps ? `href="${ob.linkMaps}" target="_blank" rel="noopener"` : "";
+        
+        let debtNote = "";
+        if (ob.jenis.toLowerCase() === "hutang" && (ob.tanggalTidakRonda || ob.alasanTidakHadir)) {
+          const fDebt = formatIndonesianDateWithoutDay(ob.tanggalTidakRonda);
+          const rText = ob.alasanTidakHadir ? `: ${ob.alasanTidakHadir}` : "";
+          debtNote = `<div style="font-size: 0.75rem; color: var(--warning); margin-top: 0.2rem;">📅 Hutang ronda tanggal ${fDebt}${rText}</div>`;
+        }
+        
+        itemsHTML += `
+          <div class="search-lainnya-item">
+            <div class="search-lainnya-left">
+              <span class="search-lainnya-date">${fDate}</span>
+              <span class="search-lainnya-group">Grup ${ob.groupNumber} — ${escapeHtml(ob.namaGroup)}</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">📍 Titik Kumpul: ${ob.linkMaps ? `<a ${mLink} class="link-maps"><strong>${escapeHtml(ob.titikKumpul)}</strong></a>` : `<strong>${escapeHtml(ob.titikKumpul)}</strong>`}</span>
+              ${debtNote}
+            </div>
+            <div class="search-lainnya-right">
+              ${dBadge}
+              <span class="group-type-badge ${typeBadgeCls}">${typeLbl}</span>
+            </div>
+          </div>
+        `;
+      });
+      
+      lainnyaHTML = `
+        <div class="search-lainnya-container">
+          <div class="search-lainnya-title">
+            <span>📋 JADWAL LAINNYA (${res.jadwalLainnya.length})</span>
+          </div>
+          <div class="search-lainnya-list">
+            ${itemsHTML}
+          </div>
+        </div>
+      `;
+    }
+    
+    let debtDetailsJt = "";
+    if (jt.jenis.toLowerCase() === "hutang" && (jt.tanggalTidakRonda || jt.alasanTidakHadir)) {
+      const formattedDebtDate = formatIndonesianDateWithoutDay(jt.tanggalTidakRonda);
+      const reasonStr = jt.alasanTidakHadir ? `: ${jt.alasanTidakHadir}` : "";
+      debtDetailsJt = `
+        <div class="search-detail-row" style="margin-top: 0.25rem;">
+          <span class="meta-icon">⚠️</span>
+          <span style="font-size: 0.85rem; color: var(--warning);">Hutang ronda tanggal <strong>${formattedDebtDate}</strong>${reasonStr}</span>
+        </div>
+      `;
+    }
+    
+    html += `
+      <div class="resident-summary-card">
+        <div class="resident-card-header">
+          <div class="resident-identity">
+            <h3 class="resident-name">${escapeHtml(res.nama)}</h3>
+            <div class="resident-badges-row">
+              <span class="resident-blok-badge">Blok ${escapeHtml(res.blok)}</span>
+              <span class="resident-wilayah-badge">${escapeHtml(res.wilayah)}</span>
+            </div>
+          </div>
+          <span class="resident-obligations-count">${countLabel}</span>
+        </div>
+        
+        <!-- JADWAL TERDEKAT / TERAKHIR -->
+        <div class="search-terdekat-box">
+          <div class="search-terdekat-header">
+            <span class="search-terdekat-badge">${terdekatBadgeText}</span>
+            <span class="group-type-badge ${typeBadgeClassJt}">${typeLabelJt}</span>
+          </div>
+          
+          <div class="search-schedule-details">
+            <div class="search-detail-row">
+              <span class="meta-icon">📅</span>
+              <span><strong>${formattedJtDate}</strong></span>
+              <div class="countdown-pill ${countdownJt.class}" style="display: inline-block; margin-left: 0.5rem;">${countdownJt.html}</div>
+            </div>
+            
+            <div class="search-detail-row">
+              <span class="meta-icon">👥</span>
+              <span>Grup ${jt.groupNumber} — <strong>${escapeHtml(jt.namaGroup)}</strong>${danruBadgeJt}</span>
+            </div>
+            
+            <div class="search-detail-row">
+              <span class="meta-icon">📍</span>
+              <span>Titik Kumpul: ${jt.linkMaps ? `<a ${mapLinkJt} class="link-maps"><strong>${escapeHtml(jt.titikKumpul)}</strong></a>` : `<strong>${escapeHtml(jt.titikKumpul)}</strong>`}</span>
+            </div>
+            
+            <div class="search-detail-row">
+              <span class="meta-icon">🏡</span>
+              <span>Wilayah Ronda: <strong>${escapeHtml(jt.wilayah)}</strong></span>
+            </div>
+            
+            ${debtDetailsJt}
+          </div>
+        </div>
+        
+        <!-- JADWAL LAINNYA -->
+        ${lainnyaHTML}
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+}
+
+function escapeHtml(text) {
+  if (!text) return "";
+  return text.toString()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function performSearch(query) {
+  const searchResultsSection = document.getElementById("search-results-section");
+  const rondaTerdekatSection = document.getElementById("ronda-terdekat-section");
+  const statsBanner = document.getElementById("stats-banner");
+  const filterSection = document.getElementById("filter-section");
+  const jadwalGrid = document.getElementById("jadwal-grid");
+  const clearBtn = document.getElementById("btn-clear-search");
+  
+  if (!query || !query.trim()) {
+    clearSearch();
+    return;
+  }
+  
+  if (clearBtn) clearBtn.style.display = "flex";
+  
+  // Hide normal schedule sections
+  if (rondaTerdekatSection) rondaTerdekatSection.style.display = "none";
+  if (statsBanner) statsBanner.style.display = "none";
+  if (filterSection) filterSection.style.display = "none";
+  if (jadwalGrid) jadwalGrid.style.display = "none";
+  
+  // Show search results section
+  if (searchResultsSection) searchResultsSection.style.display = "block";
+  
+  const results = searchWarga(query);
+  renderSearchResults(results, query);
+}
+
+function clearSearch() {
+  const searchInput = document.getElementById("search-input");
+  const clearBtn = document.getElementById("btn-clear-search");
+  const searchResultsSection = document.getElementById("search-results-section");
+  const rondaTerdekatSection = document.getElementById("ronda-terdekat-section");
+  const statsBanner = document.getElementById("stats-banner");
+  const filterSection = document.getElementById("filter-section");
+  const jadwalGrid = document.getElementById("jadwal-grid");
+  
+  if (searchInput) searchInput.value = "";
+  if (clearBtn) clearBtn.style.display = "none";
+  if (searchResultsSection) searchResultsSection.style.display = "none";
+  
+  // Restore normal schedule sections
+  if (rondaTerdekatSection) rondaTerdekatSection.style.display = "block";
+  if (statsBanner) statsBanner.style.display = "flex";
+  if (filterSection) filterSection.style.display = "block";
+  if (jadwalGrid) jadwalGrid.style.display = "grid";
+}
+
+function quickSearch(term) {
+  const searchInput = document.getElementById("search-input");
+  if (searchInput) {
+    searchInput.value = term;
+    performSearch(term);
+    searchInput.focus();
+  }
+}
+
+function initSearch() {
+  const searchInput = document.getElementById("search-input");
+  const clearBtn = document.getElementById("btn-clear-search");
+  const backBtn = document.getElementById("btn-back-to-schedule");
+  
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      const q = e.target.value;
+      if (!q.trim()) {
+        clearSearch();
+      } else {
+        performSearch(q);
+      }
+    });
+  }
+  
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      clearSearch();
+      if (searchInput) searchInput.focus();
+    });
+  }
+  
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      clearSearch();
+    });
+  }
+}
+
+// ==========================================================================
+// PDF EXPORT FEATURE (Full Putaran A4 Multi-Page PDF)
+// ==========================================================================
+
+function exportPutaranPDF() {
+  if (!allGroups || allGroups.length === 0) {
+    alert("Data jadwal belum tersedia untuk diunduh sebagai PDF.");
+    return;
+  }
+
+  const jspdfObj = window.jspdf;
+  if (!jspdfObj || !jspdfObj.jsPDF) {
+    alert("Library jsPDF belum selesai dimuat. Silakan muat ulang halaman.");
+    return;
+  }
+
+  const { jsPDF } = jspdfObj;
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+    putOnlyUsedFonts: true
+  });
+
+  const putaranNum = globalConfig && globalConfig.putaranAktif ? globalConfig.putaranAktif : (allGroups[0] ? allGroups[0].putaran : 1);
+  const totalGrup = allGroups.length;
+  const totalPeserta = allGroups.reduce((sum, g) => sum + g.members.length, 0);
+  const grupHutang = allGroups.filter(g => (g.jenis || "").toLowerCase() === "hutang").length;
+  const grupReguler = allGroups.filter(g => (g.jenis || "").toLowerCase() === "reguler").length;
+
+  const startDateStr = allGroups[0] ? allGroups[0].tanggal : "";
+  const endDateStr = allGroups[allGroups.length - 1] ? allGroups[allGroups.length - 1].tanggal : "";
+  const periodeStr = `${startDateStr} s.d ${endDateStr}`;
+
+  const primaryColor = [79, 70, 229]; // Indigo #4f46e5
+  const secondaryColor = [30, 27, 75]; // Dark Navy #1e1b4b
+  const accentGray = [241, 245, 249]; // Light slate
+  const textDark = [15, 23, 42]; // #0f172a
+  const textMuted = [100, 116, 139]; // #64748b
+
+  let currentY = 14;
+
+  // Header Title
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+  doc.text("JADWAL RONDA WARGA VILLA ASTER RESIDENCE", 14, currentY);
+
+  currentY += 6;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(textMuted[0], textMuted[1], textMuted[2]);
+  doc.text("Portal Transparansi Jadwal Ronda Malam & Keamanan Lingkungan Warga", 14, currentY);
+
+  currentY += 5;
+  doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+  doc.setLineWidth(0.6);
+  doc.line(14, currentY, 196, currentY);
+
+  currentY += 4;
+  // Metadata Box
+  doc.setFillColor(accentGray[0], accentGray[1], accentGray[2]);
+  doc.roundedRect(14, currentY, 182, 16, 2, 2, "F");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.5);
+  doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+  doc.text(`PUTARAN ${putaranNum}`, 18, currentY + 5.5);
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
+  doc.text(`•  Periode: ${periodeStr}`, 45, currentY + 5.5);
+  doc.text(`•  Total: ${totalGrup} Kelompok (${grupHutang} Hutang, ${grupReguler} Reguler)  |  ${totalPeserta} Warga Terjadwal`, 18, currentY + 11.5);
+
+  currentY += 20;
+
+  // Render Table for each group in allGroups (Independent of search query)
+  allGroups.forEach((group) => {
+    const formattedDate = formatIndonesianDate(group.tanggal);
+    const danruMem = group.members.find(m => m.danru === "Ya");
+    const danruName = danruMem ? danruMem.nama : "-";
+    const jenisUpper = (group.jenis || "Reguler").toUpperCase();
+    const isDebt = (group.jenis || "").toLowerCase() === "hutang";
+
+    const tableBody = group.members.map((mem, mIdx) => {
+      const isDanru = mem.danru === "Ya";
+      const statusDanru = isDanru ? "DANRU" : "Anggota";
+      let keterangan = "-";
+      if (isDebt && (mem.tanggalTidakRonda || mem.alasanTidakHadir)) {
+        const debtDate = mem.tanggalTidakRonda || "";
+        const debtReason = mem.alasanTidakHadir ? `: ${mem.alasanTidakHadir}` : "";
+        keterangan = `Hutang tgl ${debtDate}${debtReason}`;
+      } else if (mem.debtSequenceLabel) {
+        keterangan = mem.debtSequenceLabel;
+      }
+      return [
+        String(mIdx + 1),
+        mem.blok || "-",
+        mem.nama || "-",
+        mem.wilayah || "-",
+        statusDanru,
+        keterangan
+      ];
+    });
+
+    const callAutoTable = doc.autoTable || (typeof window !== "undefined" && window.jspdfAutoTable) || (typeof autoTable === "function" ? autoTable : null);
+
+    const tableTitle = `GRUP ${group.groupNumber} — ${group.namaGroup.toUpperCase()}  [ ${jenisUpper} ]\nTanggal: ${formattedDate}  |  Titik Kumpul: ${group.titikKumpul}  |  Danru: ${danruName}`;
+
+    callAutoTable(doc, {
+      startY: currentY,
+      head: [
+        [
+          {
+            content: tableTitle,
+            colSpan: 6,
+            styles: {
+              fillColor: isDebt ? [217, 119, 6] : [79, 70, 229],
+              textColor: [255, 255, 255],
+              fontStyle: 'bold',
+              fontSize: 8.5,
+              cellPadding: 3
+            }
+          }
+        ],
+        ['No', 'Blok', 'Nama Warga', 'Wilayah', 'Peran', 'Keterangan']
+      ],
+      body: tableBody,
+      theme: 'grid',
+      styles: {
+        fontSize: 8,
+        cellPadding: 2,
+        textColor: [15, 23, 42],
+        lineColor: [226, 232, 240],
+        lineWidth: 0.15
+      },
+      headStyles: {
+        fillColor: [241, 245, 249],
+        textColor: [51, 65, 85],
+        fontStyle: 'bold',
+        fontSize: 7.5
+      },
+      columnStyles: {
+        0: { cellWidth: 10, halign: 'center' },
+        1: { cellWidth: 18, halign: 'center', fontStyle: 'bold' },
+        2: { cellWidth: 48 },
+        3: { cellWidth: 26 },
+        4: { cellWidth: 22, halign: 'center' },
+        5: { cellWidth: 'auto' }
+      },
+      didParseCell: function(data) {
+        if (data.section === 'body') {
+          if (data.row.raw[4] === 'DANRU') {
+            data.cell.styles.fontStyle = 'bold';
+            if (data.column.index === 4) {
+              data.cell.styles.textColor = [79, 70, 229];
+            }
+          }
+        }
+      },
+    margin: { top: 14, left: 14, right: 14, bottom: 18 },
+    pageBreak: 'auto'
+  });
+
+  currentY = doc.lastAutoTable.finalY + 6;
+});
+
+// Footer for all pages (Safe from table clipping)
+const totalPages = doc.internal.getNumberOfPages();
+for (let i = 1; i <= totalPages; i++) {
+  doc.setPage(i);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.5);
+  doc.setTextColor(148, 163, 184);
+  doc.text("Villa Aster Residence — Portal Jadwal Ronda Malam", 14, 289);
+  doc.text(`Halaman ${i} dari ${totalPages}`, 196, 289, { align: "right" });
+}
+
+  const filename = `Jadwal_Ronda_Villa_Aster_Putaran_${putaranNum}.pdf`;
+  doc.save(filename);
+  showToast("PDF Jadwal Satu Putaran berhasil diunduh!");
+}
+
+// ==========================================================================
 // EVENT LISTENERS & WINDOW ACTIONS
 // ==========================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
+  initSearch();
   
   document.getElementById("btn-retry").addEventListener("click", loadData);
   
@@ -1121,6 +1680,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btn-export-putaran").addEventListener("click", () => {
     downloadScreenshot("putaran");
   });
+
+  const pdfBtn = document.getElementById("btn-download-pdf");
+  if (pdfBtn) {
+    pdfBtn.addEventListener("click", exportPutaranPDF);
+  }
   
   const refreshBtn = document.getElementById("btn-refresh-data");
   if (refreshBtn) {
