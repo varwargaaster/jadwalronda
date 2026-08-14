@@ -1485,19 +1485,28 @@ function initSearch() {
 // ==========================================================================
 
 function exportPutaranPDF() {
+  const allGroups = globalGroupsData;
   if (!allGroups || allGroups.length === 0) {
-    alert("Data jadwal belum tersedia untuk diunduh sebagai PDF.");
+    showToast("Data jadwal putaran belum dimuat untuk export PDF.", 3000);
     return;
   }
 
-  const jspdfObj = window.jspdf;
-  if (!jspdfObj || !jspdfObj.jsPDF) {
-    alert("Library jsPDF belum selesai dimuat. Silakan muat ulang halaman.");
-    return;
+  const jsPDFClass = (typeof window !== "undefined" && window.jspdf && window.jspdf.jsPDF) || (typeof jsPDF === "function" ? jsPDF : null);
+  if (!jsPDFClass) {
+    showToast("Library jsPDF tidak tersedia.", 4000);
+    throw new Error("jsPDF library tidak tersedia.");
   }
 
-  const { jsPDF } = jspdfObj;
-  const doc = new jsPDF({
+  const autoTableFn = (typeof window !== "undefined" && window.jspdfAutoTable && (window.jspdfAutoTable.default || window.jspdfAutoTable.autoTable || window.jspdfAutoTable)) ||
+                      (typeof window !== "undefined" && typeof window.autoTable === "function" && window.autoTable) ||
+                      (typeof autoTable === "function" ? autoTable : null);
+
+  if (!autoTableFn || typeof autoTableFn !== "function") {
+    showToast("Library jsPDF AutoTable tidak tersedia.", 4000);
+    throw new Error("jsPDF AutoTable library tidak tersedia.");
+  }
+
+  const doc = new jsPDFClass({
     orientation: 'portrait',
     unit: 'mm',
     format: 'a4',
@@ -1585,11 +1594,9 @@ function exportPutaranPDF() {
       ];
     });
 
-    const callAutoTable = doc.autoTable || (typeof window !== "undefined" && window.jspdfAutoTable) || (typeof autoTable === "function" ? autoTable : null);
-
     const tableTitle = `GRUP ${group.groupNumber} — ${group.namaGroup.toUpperCase()}  [ ${jenisUpper} ]\nTanggal: ${formattedDate}  |  Titik Kumpul: ${group.titikKumpul}  |  Danru: ${danruName}`;
 
-    callAutoTable(doc, {
+    autoTableFn(doc, {
       startY: currentY,
       head: [
         [
@@ -1640,23 +1647,23 @@ function exportPutaranPDF() {
           }
         }
       },
-    margin: { top: 14, left: 14, right: 14, bottom: 18 },
-    pageBreak: 'auto'
+      margin: { top: 14, left: 14, right: 14, bottom: 18 },
+      pageBreak: 'auto'
+    });
+
+    currentY = doc.lastAutoTable.finalY + 6;
   });
 
-  currentY = doc.lastAutoTable.finalY + 6;
-});
-
-// Footer for all pages (Safe from table clipping)
-const totalPages = doc.internal.getNumberOfPages();
-for (let i = 1; i <= totalPages; i++) {
-  doc.setPage(i);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(7.5);
-  doc.setTextColor(148, 163, 184);
-  doc.text("Villa Aster Residence — Portal Jadwal Ronda Malam", 14, 289);
-  doc.text(`Halaman ${i} dari ${totalPages}`, 196, 289, { align: "right" });
-}
+  // Footer for all pages (Safe from table clipping)
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(148, 163, 184);
+    doc.text("Villa Aster Residence — Portal Jadwal Ronda Malam", 14, 289);
+    doc.text(`Halaman ${i} dari ${totalPages}`, 196, 289, { align: "right" });
+  }
 
   const filename = `Jadwal_Ronda_Villa_Aster_Putaran_${putaranNum}.pdf`;
   doc.save(filename);
