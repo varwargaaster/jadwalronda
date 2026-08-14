@@ -7,7 +7,6 @@
 // ==========================================================================
 // PENTING: Ganti string di bawah ini dengan URL Web App Google Apps Script Anda setelah dideploy.
 // Contoh: "https://script.google.com/macros/s/AKfycbz1-Z_XxxYYY.../exec"
-
 const API_URL = "https://script.google.com/macros/s/AKfycbz9u7Ac0q4mV16VC68SDCX03mfylGpXZiU6jr7ASMzQc4HSOtcQcOSer3DS_08YXBpx/exec";
 
 // Data Mockup untuk uji coba lokal & demonstrasi jika API_URL belum dikonfigurasi
@@ -1485,7 +1484,6 @@ function initSearch() {
 // ==========================================================================
 
 function exportPutaranPDF() {
-  const allGroups = globalGroupsData;
   if (!allGroups || allGroups.length === 0) {
     showToast("Data jadwal putaran belum dimuat untuk export PDF.", 3000);
     return;
