@@ -1495,21 +1495,23 @@ function exportPutaranPDF() {
     throw new Error("jsPDF library tidak tersedia.");
   }
 
-  const autoTableFn = (typeof window !== "undefined" && window.jspdfAutoTable && (window.jspdfAutoTable.default || window.jspdfAutoTable.autoTable || window.jspdfAutoTable)) ||
-                      (typeof window !== "undefined" && typeof window.autoTable === "function" && window.autoTable) ||
-                      (typeof autoTable === "function" ? autoTable : null);
-
-  if (!autoTableFn || typeof autoTableFn !== "function") {
-    showToast("Library jsPDF AutoTable tidak tersedia.", 4000);
-    throw new Error("jsPDF AutoTable library tidak tersedia.");
-  }
-
   const doc = new jsPDFClass({
     orientation: 'portrait',
     unit: 'mm',
     format: 'a4',
     putOnlyUsedFonts: true
   });
+
+  const renderTable = (typeof window !== "undefined" && window.jspdfAutoTable && (window.jspdfAutoTable.default || window.jspdfAutoTable.autoTable || window.jspdfAutoTable) && ((opts) => (window.jspdfAutoTable.default || window.jspdfAutoTable.autoTable || window.jspdfAutoTable)(doc, opts))) ||
+                      (typeof window !== "undefined" && typeof window.autoTable === "function" && ((opts) => window.autoTable(doc, opts))) ||
+                      (typeof window !== "undefined" && typeof window.default === "function" && ((opts) => window.default(doc, opts))) ||
+                      (typeof doc.autoTable === "function" && ((opts) => doc.autoTable(opts))) ||
+                      (typeof autoTable === "function" && ((opts) => autoTable(doc, opts))) || null;
+
+  if (!renderTable || typeof renderTable !== "function") {
+    showToast("Library jsPDF AutoTable tidak tersedia.", 4000);
+    throw new Error("jsPDF AutoTable library tidak tersedia.");
+  }
 
   const putaranNum = globalConfig && globalConfig.putaranAktif ? globalConfig.putaranAktif : (allGroups[0] ? allGroups[0].putaran : 1);
   const totalGrup = allGroups.length;
@@ -1594,7 +1596,7 @@ function exportPutaranPDF() {
 
     const tableTitle = `GRUP ${group.groupNumber} — ${group.namaGroup.toUpperCase()}  [ ${jenisUpper} ]\nTanggal: ${formattedDate}  |  Titik Kumpul: ${group.titikKumpul}  |  Danru: ${danruName}`;
 
-    autoTableFn(doc, {
+    renderTable({
       startY: currentY,
       head: [
         [
@@ -1673,6 +1675,11 @@ function exportPutaranPDF() {
 // ==========================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("[PDF LIB] jspdf:", typeof window.jspdf);
+  console.log("[PDF LIB] jspdfAutoTable:", typeof window.jspdfAutoTable);
+  console.log("[PDF LIB] autoTable:", typeof window.autoTable);
+  console.log("[PDF LIB] window.default:", typeof window.default);
+
   initTheme();
   initSearch();
   
